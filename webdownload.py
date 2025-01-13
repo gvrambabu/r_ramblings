@@ -26,6 +26,7 @@ def download_page_without_ads(url):
 
 # Example usage
 target_url = "https://www.example.com/article"
+target_url = "https://threadreaderapp.com/thread/1878558994622456276.html" 
 clean_page = download_page_without_ads(target_url)
 
 # Save the clean HTML to a file
