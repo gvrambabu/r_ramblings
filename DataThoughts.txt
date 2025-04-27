@@ -1,0 +1,84 @@
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Transaction Data Schema",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "object",
+      "properties": {
+        "businessUnitId": { "type": "string" },
+        "regionCode": { "type": "string" },
+        "transactionId": { "type": "string" },
+        "textDescription": { "type": "string" },
+        "transactionAsOfDateTime": { "type": "string", "format": "date-time" },
+        "transactionAsWasDateTime": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "businessUnitId",
+        "regionCode",
+        "transactionId",
+        "textDescription",
+        "transactionAsOfDateTime",
+        "transactionAsWasDateTime"
+      ]
+    },
+    "attributeCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attributes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tupleAttributeName": { "type": "string" },
+          "tupleAttributeDataType": { "type": "string" },
+          "tupleAttributeValue": {}
+        },
+        "required": [
+          "tupleAttributeName",
+          "tupleAttributeDataType",
+          "tupleAttributeValue"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "tagCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tagName": { "type": "string" },
+          "tagValue": { "type": "string" }
+        },
+        "required": [
+          "tagName",
+          "tagValue"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "footer": {
+      "type": "object",
+      "properties": {
+        "jsonSchemaVersionId": { "type": "string" }
+      },
+      "required": [
+        "jsonSchemaVersionId"
+      ]
+    }
+  },
+  "required": [
+    "header",
+    "attributeCount",
+    "attributes",
+    "tagCount",
+    "tags",
+    "footer"
+  ]
+}
