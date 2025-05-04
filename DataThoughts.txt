@@ -4,3 +4,38 @@
 2. No consistent data model - language 
 3. 9 different business functions (consumers) and provide data (concept to provisioning) within 3 weeks : 6 months 
 4. 15 data aggregators, 50 different data distributors :: 
+
+
+You are the CDO of the Business Division and presenting key strategic changes you are doing like below. 
+What is your presentation deck that delivers the key messages below ? 
+
+
+Currently 
+
+* 500 applications exchanging 10000 bespoke data feeds
+* Strategy to consolidate all in one Data Lake did not work. It is not able to solve  consumer needs , is often incomplete, late and has slower time to market for delivering data 
+* Lot of consumers end up storing same data on their end as Operational Data and further distributing downstream 
+* Duplication issues as same Transactional Data is being exchanged in different formats leading to data Defects, referential integrity and lineage issues 
+* Design was to take Compute closer to the Storage (Lake) but rarely that was applied as other solutions closer to the Process 
+* inconsistent across different Data Products that are serving different consumers 
+* Investment costs & operational costs have been prohibitively higher than desired 
+
+Your strategy : 
+
+* Data Eco System will be formulated as 3 layers (starting with Data Products in a Data Mesh, then second laryer as Data Services/API/Orchestration, and on top layer is Catalog/Store)  
+* 3 Types of Data Formats (LinkFormat, Object, Tabular) 
+* Downstream consumers are provided the data as Real Time Stream, Snapshot, Historic 
+* Data is registered as Logical and then as Physical Data Sets, with clear defintions of Data Elements, Ontology 
+* Data exchange is agreed as a Contract between Data Product to the Consumer with lineage established to the Source feeding to the Data Product 
+* Controls and Access / Authorization is enforced at the Contract level with specific Data Sets in question 
+* upon invoking these Data Distribution APIs, they return GraphQL based data Elements, or all JSON elements & or as Async Kafka Stream  
+* Clearly Segreagte Storage and Compute services, and leverage existing Compute from Grid 
+* Retiring legacy Data Lake and bespoke Feeds will be done with Products, abstracted by Services.  
+
+Generate a presentation that has 
+* an  outline of the presentation
+* Functional and Non-Functional Design principles 
+* What are the key changes and why these will yield positive results 
+* OKRs to measure the success  
+* important punch lines that elevate the presentation and the value 
+
