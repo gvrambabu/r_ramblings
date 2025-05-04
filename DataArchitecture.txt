@@ -1,0 +1,26 @@
+Focusing a little bit on Data Mesh, and Data Vault mostly applicable for a large scale enterprise self-serv data platform’s.
+
+Think about it: if we're not familiar with the fundamental concepts of IaC, Data Mesh, and Data Vault, we might underestimate their significance. They aren't just tools you pick up; they are guiding principles that shape our approach and can take a long time to truly internalize and implement effectively. It's the kind of knowledge that, in retrospect, often leads to the thought, "We should have done this better from the start."
+
+However, the principles of Data Mesh and Data Vault go far beyond immediate tactical wins. They often get overlooked in favor of intermittent solutions and short-term gains. But I firmly believe that understanding the underlying philosophy and having a specific methodology or approach aligned with these principles is what truly fuels the long-term growth of a “large scale enterprise data platform”, moving it from a basic state to a mature and scalable level.
+There's no magic bullet that guarantees the "best" outcome. 
+
+But simply grasping the core ideas of Data Mesh (decentralized ownership, data as a product) and Data Vault (robust, auditable modeling) is a significant win for developing an enterprise architecture mindset. Implementing these principles today or tomorrow is secondary to the foundational understanding they provide.
+
+
+Connecting the Dots: Medallion, Data Vault, and Star/Snowflake
+
+For those thinking about implementing a Data Lakehouse architecture (like the Medallion framework), it's crucial to understand how Data Vault and dimensional modeling fit in:
+
+- Bronze Layer (~ Raw Vault): Ingest raw data with minimal transformation, mirroring the Hubs, Links, and Satellites of a Raw Data Vault.
+
+- Silver Layer (~ Business Vault): Apply business logic, creating enriched attributes, derived columns (Business Satellites), Point-in-Time (PIT) tables, and Bridge tables, extending the Raw Vault.
+
+- Gold Layer (~ Information Marts): Build consumption-ready data marts optimized for specific business needs. This is where Star and Snowflake schemas come into play, providing performant and user-friendly structures for BI tools and analytics, derived from the Business Vault.
+
+#RawData → #Bronze (Raw Vault) → #Silver (Business Vault) → #Gold (Star/Snowflake Marts). 
+
+Data Vault provides the robust and auditable foundation, while Star/Snowflake schemas deliver the speed and usability for end-user consumption. Modern tools like dbt often facilitate this transformation, with separate models for the Vault layers and the Mart layers.
+
+I can’t appreciate enough the core initial data platform architecture diagram Deepak Bhardwaj drew ✊, which I later zoomed into to map Data Vault and Medallion layers.🫳
+
