@@ -1,0 +1,69 @@
+{
+  "snapshotDate": "2025-06-07",
+  "trades": [
+    {
+      "contract": {
+        "contractId": "FXOPT_123456",
+        "effectiveDate": "2025-06-01",
+        "product": {
+          "fxOption": {
+            "optionType": "call",
+            "strike": {
+              "amount": 1.12,
+              "currency": "EUR"
+            },
+            "expiryDate": "2025-07-31",
+            "underlier": {
+              "currencyPair": {
+                "base": "EUR",
+                "quote": "USD"
+              }
+            },
+            "buyer": {
+              "partyReference": "Party1"
+            },
+            "seller": {
+              "partyReference": "Party2"
+            },
+            "premium": {
+              "amount": 500000,
+              "currency": "USD"
+            }
+          }
+        }
+      }
+    },
+    {
+      "contract": {
+        "contractId": "FXOPT_987654",
+        "effectiveDate": "2025-06-02",
+        "product": {
+          "fxOption": {
+            "optionType": "put",
+            "strike": {
+              "amount": 1.25,
+              "currency": "GBP"
+            },
+            "expiryDate": "2025-08-15",
+            "underlier": {
+              "currencyPair": {
+                "base": "GBP",
+                "quote": "USD"
+              }
+            },
+            "buyer": {
+              "partyReference": "Party3"
+            },
+            "seller": {
+              "partyReference": "Party4"
+            },
+            "premium": {
+              "amount": 350000,
+              "currency": "USD"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
