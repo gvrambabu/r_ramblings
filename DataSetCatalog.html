@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Catalog - Micro Frontend</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+    }
+
+    .header {
+        background: linear-gradient(45deg, #2c3e50, #34495e);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+    }
+
+    .header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        border-radius: 2px;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .connection-status {
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(236, 240, 241, 0.8);
+        border-bottom: 1px solid #ddd;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+    }
+
+    .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    .status-connected { background: #2ecc71; }
+    .status-disconnected { background: #e74c3c; }
+    .status-connecting { background: #f39c12; }
+
+    @keyframes pulse {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    .controls {
+        padding: 20px 30px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        background: rgba(248, 249, 250, 0.5);
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+    .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .datasets-container {
+        padding: 30px;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        text-align: center;
+        position: relative;
+    }
+
+    .datasets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .dataset-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dataset-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+    }
+
+    .dataset-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .dataset-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .dataset-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .dataset-id {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        font-family: 'Courier New', monospace;
+        background: rgba(52, 73, 94, 0.1);
+        padding: 4px 8px;
+        border-radius: 12px;
+    }
+
+    .dataset-description {
+        color: #5a6c7d;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .dataset-meta {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+
+    .dataset-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-request {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        color: #7f8c8d;
+    }
+
+    .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .message {
+        padding: 15px;
+        margin: 20px 30px;
+        border-radius: 10px;
+        display: none;
+    }
+
+    .message.success {
+        background: rgba(46, 204, 113, 0.1);
+        color: #27ae60;
+        border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .message.error {
+        background: rgba(231, 76, 60, 0.1);
+        color: #c0392b;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 10px;
+            border-radius: 15px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+        }
+        
+        .datasets-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .controls {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗂️ Dataset Catalog</h1>
+            <p>Micro Frontend with WebSocket Integration</p>
+        </div>
+
+```
+    <div class="connection-status">
+        <div class="status-indicator">
+            <div class="status-dot status-disconnected" id="statusDot"></div>
+            <span id="statusText">Disconnected</span>
+        </div>
+        <div>
+            <button class="btn btn-primary" id="connectBtn" onclick="toggleConnection()">Connect</button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-success" id="loadDatasetsBtn" onclick="loadDatasets()" disabled>
+            📊 Load All Datasets
+        </button>
+        <button class="btn btn-primary" onclick="clearMessages()">Clear Messages</button>
+    </div>
+
+    <div class="message" id="messageArea"></div>
+
+    <div class="datasets-container">
+        <h2 class="section-title">Available Datasets</h2>
+        
+        <div class="loading" id="loadingArea">
+            <div class="spinner"></div>
+            <p>Loading datasets...</p>
+        </div>
+
+        <div class="datasets-grid" id="datasetsGrid">
+            <!-- Datasets will be populated here -->
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">📂</div>
+            <h3>No datasets available</h3>
+            <p>Connect to the server and load datasets to get started.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    class DatasetCatalogApp {
+        constructor() {
+            this.socket = null;
+            this.isConnected = false;
+            this.datasets = [];
+            this.baseUrl = 'http://localhost:5000'; // Adjust as needed
+            
+            this.initializeEventListeners();
+        }
+
+        initializeEventListeners() {
+            // Socket event listeners will be set up when connecting
+        }
+
+        toggleConnection() {
+            if (this.isConnected) {
+                this.disconnect();
+            } else {
+                this.connect();
+            }
+        }
+
+        connect() {
+            try {
+                this.updateConnectionStatus('connecting', 'Connecting...');
+                
+                this.socket = io(this.baseUrl, {
+                    transports: ['websocket', 'polling'],
+                    timeout: 5000,
+                    reconnection: true,
+                    reconnectionAttempts: 3,
+                    reconnectionDelay: 1000
+                });
+
+                this.setupSocketListeners();
+                
+                // Timeout fallback
+                setTimeout(() => {
+                    if (!this.isConnected) {
+                        this.showMessage('Connection timeout. Please check if the server is running.', 'error');
+                        this.updateConnectionStatus('disconnected', 'Connection Failed');
+                    }
+                }, 5000);
+
+            } catch (error) {
+                console.error('Connection error:', error);
+                this.showMessage('Failed to connect: ' + error.message, 'error');
+                this.updateConnectionStatus('disconnected', 'Connection Failed');
+            }
+        }
+
+        setupSocketListeners() {
+            this.socket.on('connect', () => {
+                console.log('Connected to server');
+                this.isConnected = true;
+                this.updateConnectionStatus('connected', 'Connected');
+                this.showMessage('Successfully connected to server!', 'success');
+                document.getElementById('loadDatasetsBtn').disabled = false;
+            });
+
+            this.socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                this.isConnected = false;
+                this.updateConnectionStatus('disconnected', 'Disconnected');
+                document.getElementById('loadDatasetsBtn').disabled = true;
+            });
+
+            this.socket.on('connect_error', (error) => {
+                console.error('Connection error:', error);
+                this.showMessage('Connection error: ' + error.message, 'error');
+                this.updateConnectionStatus('disconnected', 'Connection Error');
+            });
+
+            // Custom events for dataset operations
+            this.socket.on('datasets_response', (data) => {
+                this.handleDatasetsResponse(data);
+            });
+
+            this.socket.on('dataset_request_response', (data) => {
+                this.handleDatasetRequestResponse(data);
+            });
+
+            this.socket.on('error', (error) => {
+                console.error('Socket error:', error);
+                this.showMessage('Server error: ' + error, 'error');
+            });
+        }
+
+        disconnect() {
+            if (this.socket) {
+                this.socket.disconnect();
+                this.socket = null;
+            }
+            this.isConnected = false;
+            this.updateConnectionStatus('disconnected', 'Disconnected');
+            document.getElementById('loadDatasetsBtn').disabled = true;
+            this.showMessage('Disconnected from server.', 'success');
+        }
+
+        updateConnectionStatus(status, text) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const connectBtn = document.getElementById('connectBtn');
+
+            statusDot.className = `status-dot status-${status}`;
+            statusText.textContent = text;
+            
+            if (status === 'connected') {
+                connectBtn.textContent = 'Disconnect';
+                connectBtn.className = 'btn btn-primary';
+            } else {
+                connectBtn.textContent = 'Connect';
+                connectBtn.className = 'btn btn-primary';
+            }
+        }
+
+        loadDatasets() {
+            if (!this.isConnected) {
+                this.showMessage('Please connect to server first.', 'error');
+                return;
+            }
+
+            this.showLoading(true);
+            this.socket.emit('get_all_datasets');
+        }
+
+        requestDataset(datasetId, datasetName) {
+            if (!this.isConnected) {
+                this.showMessage('Please connect to server first.', 'error');
+                return;
+            }
+
+            this.showMessage(`Requesting dataset: ${datasetName}...`, 'success');
+            this.socket.emit('request_dataset', { dataset_id: datasetId });
+        }
+
+        handleDatasetsResponse(data) {
+            this.showLoading(false);
+            
+            if (data.success) {
+                this.datasets = data.datasets || [];
+                this.renderDatasets();
+                this.showMessage(`Loaded ${this.datasets.length} datasets successfully!`, 'success');
+            } else {
+                this.showMessage('Failed to load datasets: ' + (data.error || 'Unknown error'), 'error');
+                this.showEmptyState();
+            }
+        }
+
+        handleDatasetRequestResponse(data) {
+            if (data.success) {
+                this.showMessage(`Dataset request successful! ${data.message || ''}`, 'success');
+            } else {
+                this.showMessage('Dataset request failed: ' + (data.error || 'Unknown error'), 'error');
+            }
+        }
+
+        renderDatasets() {
+            const grid = document.getElementById('datasetsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (this.datasets.length === 0) {
+                this.showEmptyState();
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = this.datasets.map(dataset => `
+                <div class="dataset-card">
+                    <div class="dataset-header">
+                        <div>
+                            <div class="dataset-title">${this.escapeHtml(dataset.name || 'Unnamed Dataset')}</div>
+                            <div class="dataset-id">ID: ${this.escapeHtml(dataset.id || 'N/A')}</div>
+                        </div>
+                    </div>
+                    <div class="dataset-description">
+                        ${this.escapeHtml(dataset.description || 'No description available.')}
+                    </div>
+                    <div class="dataset-meta">
+                        <div class="meta-item">
+                            📊 <span>Size: ${dataset.size || 'Unknown'}</span>
+                        </div>
+                        <div class="meta-item">
+                            🏷️ <span>Type: ${dataset.type || 'Unknown'}</span>
+                        </div>
+                        <div class="meta-item">
+                            📅 <span>Updated: ${dataset.last_updated || 'Unknown'}</span>
+                        </div>
+                    </div>
+                    <div class="dataset-actions">
+                        <button class="btn btn-request" onclick="app.requestDataset('${dataset.id}', '${this.escapeHtml(dataset.name)}')">
+                            🚀 Request Dataset
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        showEmptyState() {
+            document.getElementById('datasetsGrid').innerHTML = '';
+            document.getElementById('emptyState').style.display = 'block';
+        }
+
+        showLoading(show) {
+            document.getElementById('loadingArea').style.display = show ? 'block' : 'none';
+        }
+
+        showMessage(message, type) {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.textContent = message;
+            messageArea.className = `message ${type}`;
+            messageArea.style.display = 'block';
+            
+            // Auto-hide success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageArea.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        clearMessages() {
+            document.getElementById('messageArea').style.display = 'none';
+        }
+
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    }
+
+    // Global functions for onclick handlers
+    let app;
+
+    function toggleConnection() {
+        app.toggleConnection();
+    }
+
+    function loadDatasets() {
+        app.loadDatasets();
+    }
+
+    function clearMessages() {
+        app.clearMessages();
+    }
+
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        app = new DatasetCatalogApp();
+    });
+</script>
+```
+
+</body>
+</html>
