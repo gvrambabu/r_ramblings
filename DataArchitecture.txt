@@ -24,3 +24,14 @@ Data Vault provides the robust and auditable foundation, while Star/Snowflake sc
 
 I can’t appreciate enough the core initial data platform architecture diagram Deepak Bhardwaj drew ✊, which I later zoomed into to map Data Vault and Medallion layers.🫳
 
+A collaborative, multi-agent environment using #BigQuery Data Engineer Agent 🤖 - an Experimental Release ! 
+🔹 Automated Pipeline Creation: The agent was able to create an initial data loading pipeline, moving tables from a GCS bucket into BigQuery with simple, natural language prompts. This significantly lowers the barrier to entry for building and managing data flows.
+🔹 Intelligent Schema Generation & Modification: The demo showed the agent enriching a table's schema, even adding a boolean field to filter out profanities using BigQuery's built-in AI functions and a Gemini model. This is a huge step forward for data quality and governance.
+🔹 Autonomous Troubleshooting: One of the most impressive features was the agent's ability to detect and revert incorrect changes on its own, as well as generate data quality checks to ensure data integrity (e.g., validating email formats, checking for null values).
+🔹 Metadata and Documentation: The agent could also generate metadata for tables, which is incredibly valuable for enabling conversational analytics and other AI-powered applications that rely on a deep understanding of the data.
+
+By automating the foundational tasks of data engineering, we can free up our skilled engineers and analysts to focus on higher-value activities that drive business insights and innovation. This is a clear example of how AI is moving beyond simple task automation and becoming a true collaborator in the enterprise.
+
+Here is great youtube 📹 - https://lnkd.in/gxpSRQus
+
+#GoogleBlog - https://lnkd.in/g_ZizxM5
