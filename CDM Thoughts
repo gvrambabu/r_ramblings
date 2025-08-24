@@ -5,3 +5,483 @@ What is the expectation :
 
 Pre-2020 : FpML , SWIFT , FIX etc. which are still successful from their era 
 What did they lack : 
+
+
+schema---------
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CDM Interest Rate Swaption Business Events",
+  "type": "object",
+  "properties": {
+    "businessEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "eventIdentifier": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "identifier": { "type": "string" },
+                "source": { "type": "string" },
+                "assignedBy": { "type": "string" }
+              },
+              "required": ["identifier"]
+            }
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "eventType": {
+            "type": "string",
+            "enum": ["NewTrade", "OptionExercise"]
+          },
+          "party": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "partyId": { "type": "string" },
+                "name": { "type": "string" }
+              },
+              "required": ["partyId"]
+            }
+          },
+          "partyRole": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": ["Buyer", "Seller", "CalculationAgent", "ClearingParty"]
+                },
+                "partyReference": { "type": "string" }
+              },
+              "required": ["role", "partyReference"]
+            }
+          },
+          "trade": {
+            "type": "object",
+            "properties": {
+              "tradeId": { "type": "string" },
+              "product": {
+                "type": "object",
+                "properties": {
+                  "productType": {
+                    "type": "string",
+                    "enum": ["Swaption", "InterestRateSwap"]
+                  },
+                  "contractualProduct": {
+                    "type": "object",
+                    "properties": {
+                      "productType": { "type": "string" },
+                      "economicTerms": {
+                        "type": "object",
+                        "properties": {
+                          "option": {
+                            "type": "object",
+                            "properties": {
+                              "optionType": { "type": "string", "enum": ["Payer", "Receiver"] },
+                              "style": { "type": "string", "enum": ["European", "Bermudan", "American"] },
+                              "expirationDate": { "type": "string", "format": "date" },
+                              "strike": {
+                                "type": "object",
+                                "properties": {
+                                  "fixedRate": { "type": "number" }
+                                },
+                                "required": ["fixedRate"]
+                              },
+                              "exerciseTerms": {
+                                "type": "object",
+                                "properties": {
+                                  "exerciseProcedure": { "type": "string" },
+                                  "exerciseDate": { "type": "string", "format": "date" }
+                                }
+                              },
+                              "settlementTerms": {
+                                "type": "object",
+                                "properties": {
+                                  "cashSettlementTerms": {
+                                    "type": "object",
+                                    "properties": {
+                                      "settlementCurrency": { "type": "string" }
+                                    },
+                                    "required": ["settlementCurrency"]
+                                  }
+                                }
+                              }
+                            },
+                            "required": ["optionType", "style", "expirationDate", "strike"]
+                          },
+                          "underlier": {
+                            "type": "object",
+                            "properties": {
+                              "productType": { "type": "string", "enum": ["InterestRateSwap"] },
+                              "effectiveDate": { "type": "string", "format": "date" },
+                              "maturityDate": { "type": "string", "format": "date" },
+                              "notionalSchedule": {
+                                "type": "object",
+                                "properties": {
+                                  "amount": { "type": "number" },
+                                  "currency": { "type": "string" }
+                                },
+                                "required": ["amount", "currency"]
+                              },
+                              "fixedLeg": {
+                                "type": "object",
+                                "properties": {
+                                  "payer": { "type": "string" },
+                                  "receiver": { "type": "string" },
+                                  "fixedRate": { "type": "number" },
+                                  "dayCountFraction": { "type": "string" },
+                                  "paymentFrequency": { "type": "string" }
+                                },
+                                "required": ["payer", "receiver", "fixedRate"]
+                              },
+                              "floatingLeg": {
+                                "type": "object",
+                                "properties": {
+                                  "payer": { "type": "string" },
+                                  "receiver": { "type": "string" },
+                                  "floatingRateIndex": { "type": "string" },
+                                  "spread": { "type": "number" },
+                                  "dayCountFraction": { "type": "string" },
+                                  "paymentFrequency": { "type": "string" }
+                                },
+                                "required": ["payer", "receiver", "floatingRateIndex"]
+                              }
+                            },
+                            "required": ["productType", "effectiveDate", "maturityDate", "notionalSchedule"]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": ["productType"]
+              }
+            },
+            "required": ["tradeId", "product"]
+          },
+          "transfer": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "transferId": { "type": "string" },
+                "transferType": { "type": "string", "enum": ["OptionPremium", "CashSettlement"] },
+                "payer": { "type": "string" },
+                "receiver": { "type": "string" },
+                "amount": {
+                  "type": "object",
+                  "properties": {
+                    "value": { "type": "number" },
+                    "currency": { "type": "string" }
+                  },
+                  "required": ["value", "currency"]
+                },
+                "paymentDate": { "type": "string", "format": "date" }
+              },
+              "required": ["transferId", "transferType", "payer", "receiver", "amount"]
+            }
+          },
+          "exercise": {
+            "type": "object",
+            "properties": {
+              "optionReference": { "type": "string" },
+              "exerciseDate": { "type": "string", "format": "date" },
+              "exerciseType": { "type": "string", "enum": ["European", "Bermudan", "American"] },
+              "settlement": {
+                "type": "object",
+                "properties": {
+                  "method": { "type": "string", "enum": ["Cash", "Physical"] },
+                  "cashSettlementTerms": {
+                    "type": "object",
+                    "properties": {
+                      "settlementCurrency": { "type": "string" }
+                    },
+                    "required": ["settlementCurrency"]
+                  }
+                }
+              }
+            },
+            "required": ["optionReference", "exerciseDate", "exerciseType"]
+          }
+        },
+        "required": ["eventIdentifier", "eventDate", "eventType", "party", "partyRole"]
+      }
+    }
+  },
+  "required": ["businessEvents"]
+}
+
+------ example
+
+{
+  "businessEvents": [
+    {
+      "eventIdentifier": [
+        {
+          "identifier": "EVT-123456",
+          "source": "InternalSystem",
+          "assignedBy": "BankA"
+        }
+      ],
+      "eventDate": "2024-09-02",
+      "eventType": "NewTrade",
+      "party": [
+        {
+          "partyId": "SWAPTION-12345",
+          "name": "Bank A"
+        },
+        {
+          "partyId": "SWAPTION-67890",
+          "name": "Bank B"
+        }
+      ],
+      "partyRole": [
+        {
+          "role": "Buyer",
+          "partyReference": "SWAPTION-12345"
+        },
+        {
+          "role": "Seller",
+          "partyReference": "SWAPTION-67890"
+        },
+        {
+          "role": "CalculationAgent",
+          "partyReference": "SWAPTION-12345"
+        }
+      ],
+      "trade": {
+        "tradeId": "TRD-9999",
+        "product": {
+          "contractualProduct": {
+            "productType": "Swaption",
+            "economicTerms": {
+              "option": {
+                "optionType": "Payer",
+                "style": "European",
+                "expirationDate": "2029-09-04",
+                "strike": {
+                  "fixedRate": 0.035
+                },
+                "exerciseTerms": {
+                  "exerciseProcedure": "ManualNotice",
+                  "exerciseDate": "2029-09-04"
+                },
+                "settlementTerms": {
+                  "cashSettlementTerms": {
+                    "settlementCurrency": "USD"
+                  }
+                }
+              },
+              "underlier": {
+                "productType": "InterestRateSwap",
+                "effectiveDate": "2024-09-04",
+                "maturityDate": "2034-09-04",
+                "notionalSchedule": {
+                  "amount": 50000000,
+                  "currency": "USD"
+                },
+                "fixedLeg": {
+                  "payer": "SWAPTION-12345",
+                  "receiver": "SWAPTION-67890",
+                  "fixedRate": 0.035,
+                  "dayCountFraction": "30/360",
+                  "paymentFrequency": "SemiAnnual"
+                },
+                "floatingLeg": {
+                  "payer": "SWAPTION-67890",
+                  "receiver": "SWAPTION-12345",
+                  "floatingRateIndex": "USD-SOFR",
+                  "spread": 0.0020,
+                  "dayCountFraction": "ACT/360",
+                  "paymentFrequency": "Quarterly"
+                }
+              }
+            }
+          }
+        }
+      },
+      "transfer": [
+        {
+          "transferId": "PREM-20240904",
+          "transferType": "OptionPremium",
+          "payer": "SWAPTION-12345",
+          "receiver": "SWAPTION-67890",
+          "amount": {
+            "value": 150000,
+            "currency": "USD"
+          },
+          "paymentDate": "2024-09-04"
+        }
+      ]
+    },
+    {
+      "eventIdentifier": [
+        {
+          "identifier": "EVT-123457",
+          "source": "InternalSystem",
+          "assignedBy": "BankA"
+        }
+      ],
+      "eventDate": "2029-09-04",
+      "eventType": "OptionExercise",
+      "exercise": {
+        "optionReference": "TRD-9999",
+        "exerciseDate": "2029-09-04",
+        "exerciseType": "European",
+        "settlement": {
+          "method": "Cash",
+          "cashSettlementTerms": {
+            "settlementCurrency": "USD"
+          }
+        }
+      },
+      "trade": {
+        "tradeId": "SWAP-EXERCISED-001",
+        "product": {
+          "productType": "InterestRateSwap",
+          "effectiveDate": "2029-09-04",
+          "maturityDate": "2034-09-04",
+          "notionalSchedule": {
+            "amount": 50000000,
+            "currency": "USD"
+          },
+          "fixedLeg": {
+            "payer": "SWAPTION-12345",
+            "receiver": "SWAPTION-67890",
+            "fixedRate": 0.035,
+            "dayCountFraction": "30/360",
+            "paymentFrequency": "SemiAnnual"
+          },
+          "floatingLeg": {
+            "payer": "SWAPTION-67890",
+            "receiver": "SWAPTION-12345",
+            "floatingRateIndex": "USD-SOFR",
+            "spread": 0.0020,
+            "dayCountFraction": "ACT/360",
+            "paymentFrequency": "Quarterly"
+          }
+        }
+      }
+    }
+  ]
+}
+
+----- FpML
+
+<trade>
+  <tradeHeader>
+    <partyTradeIdentifier>
+      <partyReference href="partyA"/>
+      <tradeId tradeIdScheme="http://www.banka.com/swaption-id">SWAPTION-12345</tradeId>
+    </partyTradeIdentifier>
+    <partyTradeIdentifier>
+      <partyReference href="partyB"/>
+      <tradeId tradeIdScheme="http://www.bankb.com/swaption-id">SWAPTION-67890</tradeId>
+    </partyTradeIdentifier>
+    <tradeDate>2024-09-02</tradeDate>
+  </tradeHeader>
+  <swaption>
+    <premium>
+      <payerPartyReference href="partyA"/>
+      <receiverPartyReference href="partyB"/>
+      <premiumAmount>
+        <currency>USD</currency>
+        <amount>150000</amount>
+      </premiumAmount>
+      <paymentDate>
+        <unadjustedDate>2024-09-04</unadjustedDate>
+        <dateAdjustments>
+          <businessDayConvention>NONE</businessDayConvention>
+        </dateAdjustments>
+      </paymentDate>
+    </premium>
+    <exercise>
+      <americanExercise>
+        <commencementDate>
+          <unadjustedDate>2024-09-04</unadjustedDate>
+        </commencementDate>
+        <expirationDate>
+          <unadjustedDate>2029-09-04</unadjustedDate>
+        </expirationDate>
+      </americanExercise>
+      <expirationDate>
+        <unadjustedDate>2029-09-04</unadjustedDate>
+      </expirationDate>
+      <exerciseFee>
+        <payerPartyReference href="partyA"/>
+      </exerciseFee>
+      <swaptionExerciseConventions>
+        <swaptionExerciseConventionsType>European</swaptionExerciseConventionsType>
+      </swaptionExerciseConventions>
+    </exercise>
+    <swaptionType>Payer</swaptionType>
+    <underlyingSwap>
+      <swap>
+        <productType>InterestRateSwap</productType>
+        <swapStream>
+          <payerPartyReference href="partyA"/>
+          <receiverPartyReference href="partyB"/>
+          <calculationPeriodAmount>
+            <calculation>
+              <notionalSchedule>
+                <notional>
+                  <currency>USD</currency>
+                  <amount>50000000</amount>
+                </notional>
+              </notionalSchedule>
+              <fixedRateSchedule>
+                <initialValue>0.035</initialValue>
+              </fixedRateSchedule>
+              <dayCountFraction>30/360</dayCountFraction>
+            </calculation>
+          </calculationPeriodAmount>
+          <paymentDates>
+            <paymentFrequency>
+              <periodMultiplier>6</periodMultiplier>
+              <period>M</period>
+            </paymentFrequency>
+          </paymentDates>
+        </swapStream>
+        <swapStream>
+          <payerPartyReference href="partyB"/>
+          <receiverPartyReference href="partyA"/>
+          <calculationPeriodAmount>
+            <calculation>
+              <notionalSchedule>
+                <notional>
+                  <currency>USD</currency>
+                  <amount>50000000</amount>
+                </notional>
+              </notionalSchedule>
+              <floatingRateIndex>SOFR</floatingRateIndex>
+              <spreadSchedule>
+                <initialValue>0.0020</initialValue>
+              </spreadSchedule>
+              <dayCountFraction>ACT/360</dayCountFraction>
+            </calculation>
+          </calculationPeriodAmount>
+          <paymentDates>
+            <paymentFrequency>
+              <periodMultiplier>3</periodMultiplier>
+              <period>M</period>
+            </paymentFrequency>
+          </paymentDates>
+        </swapStream>
+      </swap>
+    </underlyingSwap>
+  </swaption>
+  <party id="partyA">
+    <partyId>Bank A</partyId>
+  </party>
+  <party id="partyB">
+    <partyId>Bank B</partyId>
+  </party>
+</trade>
+
