@@ -6,6 +6,36 @@ What is the expectation :
 Pre-2020 : FpML , SWIFT , FIX etc. which are still successful from their era 
 What did they lack : 
 
+Core Concepts
+	•	Taxonomy: CDM defines products (e.g., swaps, swaptions, repos), events (new trade, reset, exercise, termination), and supporting elements (legal agreements, observables like market rates).
+	•	Event-Driven Model: Rather than storing just a static trade record, CDM represents each event (execution, amendment, payment, etc.) that changes the state of the trade.
+	•	Primitives: Each event is expressed in terms of primitives like New, Transfer, Reset, QuantityChange, Terminate. These are the building blocks of all lifecycle events.
+	•	Determinism & Auditability: Because every change is captured as an event, you can replay the entire history of a trade from inception to expiry/termination.
+Unified framework for OTC derivatives, cash securities, and securities financing.
+Taxonomy: Hierarchical classification (e.g., Swaption, Bond) across asset classes.
+	•  Structure: Seven dimensions (Product, Event, Process, etc.) for lifecycle coverage.
+	•  Executable: Machine-readable via Rosetta DSL (Java/Python outputs).
+
+How It Works in Practice
+	1.	Trade Creation (New Event)
+	•	A swap or swaption is booked as a New event.
+	•	CDM JSON or Rosetta-generated code captures product details, parties, and economics.
+	2.	Lifecycle Events
+	•	Each subsequent action (e.g., fixing, exercise, amendment) is represented as an event object.
+	•	The event references the prior trade state, applies a primitive (e.g., reset, exercise), and outputs a new trade state.
+	3.	State Transitions
+	•	A trade is never overwritten — it evolves via state transitions.
+	•	Example: Swaption → Exercise → New Swap → Resets → Payments → Termination.
+	4.	Integration Across Participants
+	•	Because CDM defines events in a common structure, two firms exchanging CDM messages can reconcile trades without custom mappings.
+	•	For example, a regulator or clearinghouse can validate lifecycle events without bespoke interpretation.
+
+⸻
+
+4. Technology Side
+	•	Rosetta DSL: The official ISDA tooling (Rosetta) uses a domain-specific language to model CDM and can generate Java, JSON schemas, etc.
+	•	Custom Implementations: Firms can adopt CDM semantics and map them into their own tech stack (e.g., Python, C#, Avro, Parquet) without using Rosetta.
+	•	Open Source: The CDM is maintained under ISDA/FINOS governance, so the taxonomy evolves with industry consensus.
 
 schema---------
 {
