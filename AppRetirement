@@ -1,3 +1,41 @@
+Create a comprehensive PR/FAQ document for a proposed software product or feature, following Amazon's "Working Backwards" process. The document should include:
+
+A one-page press release that addresses:
+
+Who the customer is
+The problem being solved
+The proposed solution (explained from the customer's perspective)
+Why the customer would reasonably adopt this solution
+The potential market size (if relevant for your context)
+
+An internal FAQ section that covers:
+
+Technical details and implementation considerations
+Estimated costs and resources required
+Potential challenges and how they might be addressed
+Metrics for measuring success
+
+An external FAQ section that addresses:
+
+Common questions potential customers might have
+Pricing information (if applicable)
+Availability and launch timeline
+Comparisons to existing solutions in the market
+
+The PR/FAQ should be written as if the product has already launched and been successful. Focus on the customer benefits and value proposition. Be specific and avoid generic statements or buzzwords. The document should be clear enough that it could be understood and critiqued by stakeholders from various departments.
+Remember to:
+
+Keep the press release to one page
+Use simple, clear language throughout
+Address potential objections or concerns in the FAQ sections
+Include relevant data or market research to support your claims
+Consider different customer segments or use cases, if applicable
+
+Your goal is to create a document that will serve as a blueprint for the product's development and a tool for aligning stakeholders on the vision and execution plan.
+----------------
+
+
+
 Application Retirement Playbook
 High-Level Summary
 This playbook provides a comprehensive, structured framework for retiring legacy applications in capital markets environments. It addresses the complexities of modernizing technology stacks while minimizing operational disruptions, ensuring regulatory compliance, and realizing cost savings. The approach follows a logical sequence: starting with identifying retirement drivers and problems, engaging users, conducting thorough analysis, designing functional and non-functional aspects, managing risks and controls, building necessary components, rolling out in phases, handling conversions and data feeds, and finally executing retirements. This phased methodology promotes efficiency, stakeholder alignment, and risk mitigation, ultimately supporting strategic goals like cloud adoption, process simplification, and reduced operational risks.
