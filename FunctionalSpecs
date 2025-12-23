@@ -1,5 +1,221 @@
 prompt : 
 
+Gemini again : 
+
+This document provides a comprehensive Functional Specification for the Strategic Trade Management Platform (STMP). It follows the structure of a standard architectural document, tailored for a high-performance banking environment comparable to Murex, Calypso, or Athena architectures.
+Strategic Trade Management Platform (STMP) - Functional Specification
+1. Introduction
+1.1 Purpose
+The purpose of this document is to define the functional architecture for the Strategic Trade Management Platform (STMP). The STMP aims to consolidate trade processing for FX, Rates, Credit, and Municipal (Muni) desks into a single, cross-asset ecosystem. It serves as the authoritative source for trade economics, lifecycle state, and risk connectivity.
+1.2 Scope
+The scope includes the end-to-end processing of derivative instruments, from initial execution (Front Office) to settlement instructions (Back Office hand-off).
+ * Asset Classes: FX (Spot, Fwd, Swaps, Options), Rates (Swaps, Swaptions, Inflation), Credit (CDS, Indices), Munis (Total Return Swaps, TOB).
+ * Functions: Capture, Lifecycle Management, Position Keeping, Workflow Orchestration, and Reporting.
+1.3 Overview
+STMP replaces fragmented legacy systems with a component-based architecture. It leverages concepts found in platforms like J.P. Morgan’s Athena (dependency graph risk) and Calypso (Java-based component modularity) to provide a "Golden Source" for trade data.
+1.4 References
+ * ISDA Common Domain Model (CDM) Standards
+ * FpML 5.10 Schema Definitions
+ * Internal Regulatory Reporting Guidelines (Dodd-Frank, EMIR, FRTB)
+2. Functional Requirements
+2.1 Common Trade Capture
+2.1.1 Overview
+A centralized gateway to ingest trades from electronic venues and manual entry, normalizing them into a unified internal object model.
+2.1.2 Key Features
+ * Venue Agnosticism: Decouples execution sources (Bloomberg, Tradeweb, Voice) from internal processing.
+ * Flexible Taxonomy: Component-based trade definitions (Legs, Barriers, Schedules) rather than rigid templates.
+ * Smart Entry UI: Reactive front-end that adjusts valid fields/defaults based on instrument context.
+2.1.3 Inputs and Outputs
+ * Inputs: FIX messages (ECNs), JSON/XML payloads (API), User Input (UI).
+ * Outputs: A validated, normalized TradeObject persisted in the Staging Area.
+2.1.4 Processes and Validations
+ * Syntactic Validation: Checks field formats against FpML/ISDA standards.
+ * Semantic Validation: Verifies logical consistency (e.g., Pay Date > Trade Date).
+ * Static Data Check: Validates Counterparty status, Trader limits, and Credit Line availability.
+2.1.5 Use Cases
+ * UC-2.1.A: Trader books a complex Muni Total Return Swap; UI dynamically renders bond reference data fields.
+ * UC-2.1.B: STP feed from Bloomberg captures an FX Option; system auto-matches it to an internal strategy.
+2.2 Life Cycle Management and Trade Model Integration
+2.2.1 Overview
+A deterministic state machine managing trade evolution and linking economics to the quantitative pricing library.
+2.2.2 Key Features
+ * Event-First Architecture: Treats Novations, Resets, and Terminations as discrete business events.
+ * Dependency Graph: Dynamically maps trade attributes to risk models (dependency injection).
+ * Corp Action Automation: Automated handling of Bond calls (Munis) and Credit Events (CDS).
+2.2.3 Inputs and Outputs
+ * Inputs: Validated Trade Object, Lifecycle Event Trigger (e.g., "Exercise Option").
+ * Outputs: New Trade Version, Downstream Settlement Instructions, Risk Calculation Trigger.
+2.2.4 Processes and Validations
+ * State Transition Logic: Enforces valid progression (e.g., cannot "Terminate" a "Void" trade).
+ * Pricing Alignment: Triggering a lifecycle event automatically invalidates cached risk numbers, forcing a recalc.
+2.2.5 Use Cases
+ * UC-2.2.A: Automated Rate Reset for an IRS; system fixes the rate against the curve and generates the cash flow.
+ * UC-2.2.B: Partial termination of a CDS position; system scales down notional and calculates the termination fee.
+2.3 Blotter and Position Management
+2.3.1 Overview
+Real-time dashboard for inventory management, risk aggregation, and P&L attribution.
+2.3.2 Key Features
+ * Hierarchical Aggregation: Tree-based views (Portfolio -> Strategy -> Trade -> Leg).
+ * Real-Time Streaming: WebSocket integration for sub-second position updates.
+ * Inventory Views: Toggles between "Legal Inventory," "Risk Inventory," and "Funding Inventory."
+2.3.3 Inputs and Outputs
+ * Inputs: Stream of Trade Events, Market Data Ticks.
+ * Outputs: Aggregated Greeks (Delta, Gamma, Vega), Real-time P&L, Risk Reports.
+2.3.4 Processes and Validations
+ * P&L Attribution (PAA): Decomposes daily P&L into factors (Spot move, Time decay, New Activity).
+ * Limit Monitoring: Alerts if a trade pushes a desk over Delta or VaR limits.
+2.3.5 Use Cases
+ * UC-2.3.A: Head of Rates Desk views global Delta exposure aggregated by currency.
+ * UC-2.3.B: Trader runs a "What-If" scenario to see the impact of a block trade on the book's Gamma profile.
+2.4 Workflows and Exception Management
+2.4.1 Overview
+BPMN-compliant orchestration engine enforcing STP rules and managing manual interventions.
+2.4.2 Key Features
+ * Configurable Topologies: Asset-specific workflows (e.g., "No-touch" for FX Spot vs. "3-Stage Approval" for Structured Credit).
+ * Task-Based Exception Handling: Assigns specific remediation tasks to user roles/groups.
+ * 4-Eye Checks: Mandates secondary approval for sensitive amendments.
+2.4.3 Inputs and Outputs
+ * Inputs: Trade State changes, Validation Failures.
+ * Outputs: Workflow Tasks, Notifications, Audit Log entries.
+2.4.4 Processes and Validations
+ * Rule Engine Evaluation: Determines if a trade requires credit officer sign-off based on Notional/Risk.
+ * SLA Monitoring: Flags tasks sitting in queues longer than defined thresholds.
+2.4.5 Use Cases
+ * UC-2.4.A: Back-office user receives a task to repair a trade with an invalid SSI (Standard Settlement Instruction).
+ * UC-2.4.B: Compliance officer approves a trade flagged for "Off-Market Rate" checks.
+2.5 SoR Data Store for Trade Events
+2.5.1 Overview
+The immutable, bitemporal persistence layer acting as the Golden Source.
+2.5.2 Key Features
+ * Bitemporality: Stores Valid Time (Business date) and Transaction Time (System entry date).
+ * Event Sourcing: Reconstructs trade state by replaying history rather than overwriting rows.
+ * Hybrid Storage: In-memory caching for active trades; Columnar storage for historical analytics.
+2.5.3 Inputs and Outputs
+ * Inputs: Finalized Trade Events.
+ * Outputs: Historical Snapshots, Audit Trails, Regulatory Reports.
+2.5.4 Processes and Validations
+ * Immutability Enforcement: Prevents physical deletion of records; supports only logical "cancellation" events.
+ * Time Travel Querying: Retrieving the state of the book "as of" a past timestamp.
+2.5.5 Use Cases
+ * UC-2.5.A: Audit requests a report of the Rates book as it looked on March 31st (Valid Time) generated today (Transaction Time).
+2.6 Multi Entity Support
+2.6.1 Overview
+Manages legal entity hierarchies, inter-affiliate bookings, and jurisdiction-specific rules.
+2.6.2 Key Features
+ * Back-to-Back Automation: Auto-books mirror trades to transfer risk between entities (e.g., Branch to Hub).
+ * Virtual Portfolios: Aggregates risk across entities for management views while maintaining legal separation.
+ * Jurisdiction Logic: Applies specific regulatory tags (Dodd-Frank vs. EMIR) based on booking entity.
+2.6.3 Inputs and Outputs
+ * Inputs: Client Trade Execution details.
+ * Outputs: Client Trade + Mirror Trade(s).
+2.6.4 Processes and Validations
+ * Transfer Pricing: Calculates internal transfer prices/spreads for inter-affiliate deals.
+ * Entity Validation: Ensures the booking entity is licensed for the specific product type.
+2.6.5 Use Cases
+ * UC-2.6.A: London trader executes USD/JPY. System books External Trade in Tokyo Entity and Internal Mirror Trade between Tokyo and London.
+2.7 Observable Reference Data
+2.7.1 Overview
+Abstraction layer managing market data objects (Curves, Surfaces) linked to trades.
+2.7.2 Key Features
+ * Market Data Sets: Supports multiple environments (Real-time, EOD, Stressed, Historic).
+ * Semantic Linking: Trades reference logical names (e.g., "USD-SOFR-3M") rather than raw values.
+ * Snapshotting: Freezes market data used for official valuations for auditability.
+2.7.3 Inputs and Outputs
+ * Inputs: Raw Market Feeds (Reuters/Bloomberg).
+ * Outputs: Calibrated Curves, Volatility Surfaces, Fixings.
+2.7.4 Processes and Validations
+ * Curve Construction: Bootstrapping yield curves from raw instrument quotes.
+ * Tolerance Checking: Alerts on massive deviations in volatility surface inputs.
+2.7.5 Use Cases
+ * UC-2.7.A: Risk engine requests "Stressed Scenario A" data set to calculate VaR.
+ * UC-2.7.B: Controller verifies the specific FX rate used to value a trade during last month's close.
+3. Non-Functional Requirements
+3.1 Performance
+ * Throughput: System must handle 500 trades/second at peak.
+ * Latency: Trade capture to risk availability < 500ms.
+3.2 Scalability
+ * Microservices architecture allowing horizontal scaling of the Pricing/Risk compute grid on cloud infrastructure (AWS/Azure).
+3.3 Security
+ * Role-Based Access Control (RBAC) down to the portfolio level.
+ * Encryption of data at rest (AES-256) and in transit (TLS 1.3).
+3.4 Usability
+ * "Dark Mode" optimized UI for low-light trading floors.
+ * Keyboard shortcuts for high-frequency workflows.
+3.5 Reliability and Availability
+ * 99.99% Availability during trading hours.
+ * Active-Active Disaster Recovery configuration.
+3.6 Maintainability
+ * CI/CD pipelines for zero-downtime deployments.
+ * Modular codebase allowing independent versioning of product definitions.
+3.7 Compliance
+ * Full immutability of the audit trail.
+ * GDPR/PII compliance for counterparty contact data.
+4. Data Models and Flows
+4.1 High-Level Data Model
+The Core Trade Object consists of:
+ * Header: ID, Version, User, Timestamp, Entity.
+ * Economics: Product Component (Swap, Option), Notional Schedule, Reset Schedule.
+ * Parties: Counterparty, Broker, Clearing House.
+ * Settlement: SSIs, Cashflow definitions.
+4.2 Key Entities and Relationships
+ * Trade 1 --- * Event (1-to-many)
+ * Trade * --- 1 Portfolio (Many-to-1)
+ * Trade * --- 1 Counterparty (Many-to-1)
+ * Trade * --- * RiskFactor (Many-to-Many via Dependency Graph)
+4.3 Business Process Flows
+ * Capture: Ingestion -> Validation -> Enrichment.
+ * Lifecycle: Event Trigger -> State Transition -> Risk Update.
+ * Settlement: Netting -> Confirmation Generation -> Payment Instruction.
+5. Interfaces and Integrations
+5.1 External Interfaces
+ * Market Connectivity: FIX Engine (4.4/5.0) for execution platforms.
+ * Clearing: MQ connectivity to CCPs (LCH, CME, ICE).
+ * Regulatory: Reporting hub connectivity (DTCC, Unavista).
+5.2 Internal Integrations
+ * General Ledger: EOD batch export of accounting events.
+ * Collateral Management: Real-time push of exposure updates.
+ * Credit Risk Engine: Pre-deal limit check API.
+5.3 API Specifications
+ * REST API: For standard CRUD operations on trades and reference data.
+ * GraphQL: For flexible UI data fetching (Blotter queries).
+ * gRPC: For low-latency inter-service communication (e.g., Trade Store to Risk Engine).
+6. Error Handling and Logging
+6.1 Error Categories
+ * Business Errors: Validation failures (e.g., "Limit Breached").
+ * System Errors: Infrastructure failures (e.g., "Database Timeout").
+ * Downstream NACK: Rejection from external systems (e.g., CCP rejection).
+6.2 Handling Strategies
+ * Dead Letter Queues (DLQ): For failed messages requiring technical triage.
+ * Retry Policies: Exponential back-off for transient network issues.
+ * Workflow Integration: Business errors generate "Repair" tasks in the user workflow.
+6.3 Logging Mechanisms
+ * Centralized logging (e.g., ELK Stack/Splunk) with correlation IDs to trace transactions across microservices.
+7. Assumptions, Dependencies, and Constraints
+7.1 Assumptions
+ * High-quality market data feeds are available internally.
+ * Cloud infrastructure is approved for hosting production trade data.
+7.2 Dependencies
+ * Availability of the enterprise "Counterparty Master" system.
+ * Integration with the existing enterprise authentication (SSO) provider.
+7.3 Constraints
+ * Regulatory: Must meet FRTB reporting deadline by [Date].
+ * Legacy: Must maintain backward compatibility with the legacy Settlement System for 12 months.
+8. User Interface Guidelines
+8.1 General UI Principles
+ * Density: High data density is preferred over whitespace (Trader preference).
+ * Responsiveness: No blocking UI operations; async loading for heavy queries.
+8.2 Key Screens and Wireframe Descriptions
+ * Trade Entry Ticket: Tabular layout, context-aware fields, instant validation feedback.
+ * Risk Matrix: Pivot-table style grid with drag-and-drop grouping columns.
+ * Task Inbox: Email-style list of workflow exceptions with "Quick Action" buttons.
+9. Glossary
+ * Bitemporal: Handling two timelines (Valid Time vs. Transaction Time) for data.
+ * Bootstrapping: Method for constructing a zero-coupon yield curve.
+ * Novation: The act of replacing one of the parties in a contract with a third party.
+ * STP (Straight-Through Processing): Automated processing without manual intervention.
+10. Appendices
+10.1 Traceability Matrix
+(Placeholder: Table mapping Functional Requirements to specific Business Requirements Documents and Regulatory codes).
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
