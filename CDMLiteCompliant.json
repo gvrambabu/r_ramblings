@@ -1,3 +1,15 @@
+You are the ISDA CDM FinOS expert and has a good knowledge of FX Options and IR Swaps. 
+A large enterprise would like to apply CDM in 2 modes , one is 'lite' and the other 'compliance' mode. 
+
+They would like to use lite for Trade Booking, Storing Trade Events 
+And they would like to use Compliance Mode for Trade Life Cycle Processing and Trade Distribution to downstreams. 
+Can you provide through specific examples of what it means by Lite Mode and Compliance Mode for these stages 
+
+Make a case for why Lite and Compliance are the right ways and explicitly differentiate these 2 modes. 
+Use different types of Trade Events and not thionk of simple examples ? 
+
+----------
+
 Below is a **practitioner-level answer**, written from the perspective of an **ISDA CDM / FINOS domain expert**, and grounded in **real FX Options and IR Swaps trade-lifecycle behavior** at large banks (front-office → risk → ops → finance → regulatory).
 
 I’ll structure this as:
