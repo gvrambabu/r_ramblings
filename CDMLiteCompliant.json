@@ -397,3 +397,270 @@ If you want, next we can:
 * Define **API contracts for each mode**
 
 Just tell me where you want to go next.
+
+------------
+# CDM Lite vs Compliance Mode: A Trading Systems Perspective
+
+## The Core Distinction
+
+**Lite Mode**: Minimum viable CDM wrapper around existing trade representations. You’re essentially saying “I need CDM identifiers and basic structure to participate in the ecosystem, but I’m not replatforming my booking system.”
+
+**Compliance Mode**: Full CDM semantic adherence where the model dictates business logic, lifecycle events follow CDM transition rules, and downstream systems receive validated, legally-binding representations.
+
+## Mode Selection by Function
+
+### Trade Booking (Lite Mode)
+
+**Why Lite?**
+Front office traders don’t care about CDM compliance during booking. They care about speed, familiar workflows, and not breaking existing connectivity to pricing engines, hedge ratios, and P&L systems. Forcing full CDM validation at booking would be like making a surgeon fill out insurance paperwork during surgery.
+
+**Example 1: FX Target Redemption Forward (TARF)**
+
+Trader books a TARF with:
+
+- Barrier levels (knock-out)
+- Target profit level (automatic termination)
+- Leverage ratios per fixing
+- Delivery schedule
+
+**Lite Mode Capture:**
+
+```
+TradeIdentifier: CDM-mapped
+Product: ForeignExchange (top-level only)
+Economics: Native system format (proprietary TARF parameters)
+Party roles: Minimally mapped to CDM party schema
+Booking timestamp: CDM EventTimestamp
+```
+
+You’re NOT modeling:
+
+- Full Payout structure with conditional delivery amounts
+- Barrier observations as CDM Observable events
+- Early termination conditions in CDM EconomicTerms.extraordinaryEvents
+
+Why? Because your FX options pricing library already handles barrier monitoring and target profit calculations. Reimplementing this in CDM at booking creates duplication risk and slows booking by 10-15 seconds per trade (death in FX spot/options).
+
+**Example 2: IR Swap with Conditional Notional Steps**
+
+Multi-curve swap where notional steps down based on CMS rate triggers.
+
+**Lite Mode:**
+
+- Store swap as CDM InterestRateProduct skeleton
+- Keep notional step logic in native format
+- Map floating rate index to CDM FloatingRateIndexEnum
+- Don’t decompose CMS trigger into CDM Observation primitives
+
+Your existing rates curve engine already handles CMS convexity adjustments. You don’t want CDM validation rejecting a trade because the CMS trigger period doesn’t parse correctly into CDM’s observation framework.
+
+-----
+
+### Storing Trade Events (Lite Mode)
+
+**Why Lite?**
+Intraday, you’re capturing events as they happen from multiple sources: allocations from order management, amendment requests from sales, partial terminations from credit officers. These need to be stored immediately for audit trail purposes, even if they’re not yet “CDM compliant.”
+
+**Example 3: FX Option Barrier Breach (American Digital)**
+
+Event captured at 14:23:07 UTC:
+
+- EUR/USD spot touches 1.0500 knock-in barrier
+- Option activates from dormant to live vanilla call
+- Event source: Market data feed → Exotic monitoring engine
+
+**Lite Mode Storage:**
+
+```
+EventType: BarrierEvent (custom, not full CDM primitive)
+Trade Reference: CDM TradeIdentifier
+Event timestamp: CDM-compliant
+Barrier Level Breached: Native format
+New Trade State: "Active" (enum, not full CDM lifecycle state)
+Source System: MarketDataID (not CDM Party)
+```
+
+You store this immediately because regulatory audit requires sub-second event timestamping. You don’t wait to build a full CDM `ObservationPrimitive` with proper `ObservationIdentifier`, `ObservationDate`, and `Observation` structured correctly.
+
+**Example 4: IR Swap Partial Termination by Dealer**
+
+Dealer exercises right to terminate 40% of notional on a callable swap.
+
+**Lite Mode Storage:**
+
+```
+EventType: PartialTermination
+Notional Reduced: 60M → 36M (delta stored)
+Exercise Timestamp: CDM-compliant
+Fee Amount: Native currency object
+Termination Reason: "DealerCall" (not CDM BusinessEvent with full lineage)
+```
+
+Why not full CDM? Because the dealer’s exercise right might reference proprietary call schedules that don’t cleanly map to CDM `ExtraordinaryEvents`. You need this stored NOW for P&L systems to adjust risk, not after a 30-second CDM transformation pipeline.
+
+-----
+
+## Compliance Mode: Lifecycle Processing
+
+**Why Compliance?**
+Once trades enter lifecycle processing (resets, fixings, cash settlements, novations), you need legal enforceability and regulatory reporting accuracy. Here, CDM acts as the contract of record.
+
+**Example 5: IR Swap Rate Reset with Fallback Waterfall (Post-LIBOR)**
+
+Floating leg resets using SOFR, but contract has RFR fallback provisions.
+
+**Compliance Mode Processing:**
+
+```
+BusinessEvent:
+  eventType: Reset
+  primitive:
+    reset:
+      - resetValue: 4.875% (SOFR Compounded in Arrears)
+      - resetDate: 2026-01-05
+      - rateObservation:
+          observedRate: 4.875%
+          observationPeriod: [2025-12-05 to 2026-01-05]
+          rateSource: FloatingRateIndexEnum.USD-SOFR-COMPOUND
+      - fallbackProvisions: 
+          fallbackSurveyRate: null (not triggered)
+```
+
+Why full compliance here? Because if there’s a dispute about whether SOFR was correctly compounded or if fallback should have triggered, the CDM representation is your legal defense. The `Reset` primitive contains:
+
+- Observable rate with source
+- Calculation methodology reference
+- Fallback waterfall traversal logic
+
+**Example 6: FX TARF Early Termination via Target Profit**
+
+TARF accumulates $2M profit across fixings, hitting target exactly.
+
+**Compliance Mode:**
+
+```
+BusinessEvent:
+  eventType: Termination
+  eventQualifier: ExtraordinaryTermination
+  primitive:
+    quantityChange:
+      - change: [Decrease notional to ZERO across all future delivery dates]
+      - trigger:
+          triggerType: TargetProfit
+          triggerLevel: 2,000,000 USD
+          observedLevel: 2,000,000 USD
+          observationDate: 2026-01-07T10:15:03Z
+    transfer:
+      - settlementAmount: [Remaining deliverable obligations netted]
+      - settlementDate: T+2
+```
+
+This goes to:
+
+1. **Regulatory reporting** (MiFID II, EMIR) - needs exact trigger timestamp and observed level
+1. **Downstream credit systems** - must see notional reduction with BusinessEvent lineage
+1. **Legal/compliance archives** - full audit trail if counterparty disputes trigger calculation
+
+Without compliance mode, you’d send downstream systems a “TARF_TERMINATED” flag with a notional change, and three months later Legal is asking why the termination happened and you’re reverse-engineering from logs.
+
+-----
+
+## Trade Distribution to Downstreams (Compliance Mode)
+
+**Why Compliance?**
+Downstream systems (risk engines, regulatory reporters, collateral management) are the consumers of truth. They can’t accept “trust me, the trade is booked correctly.” They need semantically validated, schema-compliant representations.
+
+**Example 7: IR Swaption Distribution to Credit Risk System**
+
+Swaption with Bermudan exercise on IMM dates, cash-settled.
+
+**Compliance Mode Distribution:**
+
+```
+InterestRateProduct:
+  productType: Swaption
+  underlyer:
+    InterestRateSwap: [Full CDM swap representation]
+      fixedLeg: {...}
+      floatingLeg: {...}
+  exercise:
+    exerciseType: Bermudan
+    exerciseDates: [IMM dates from 2026-03 to 2028-12]
+    exerciseStyle: Cash-settled
+    settlementTerms:
+      physicalSettlement: false
+      cashSettlement:
+        cashSettlementAmount: [PV of underlyer at exercise]
+  premium:
+    payerReceiver: Pay
+    priceQuantity: [Full CDM price structure]
+```
+
+Credit risk system needs this because:
+
+- **CVA calculation**: Bermudan exercise creates path-dependent exposure
+- **Potential Future Exposure (PFE)**: Must simulate exercise decisions across paths
+- **Wrong-way risk**: If settlement is physical vs cash, collateral requirements differ
+
+If you send this in Lite mode (just “Bermudan swaption” with a premium), credit risk misses the cash settlement detail and overestimates collateral needs.
+
+**Example 8: FX Exotic (Worst-of Basket Option) to Regulatory Reporter**
+
+Option pays based on worst-performing currency in a basket (EUR, GBP, JPY vs USD).
+
+**Compliance Mode:**
+
+```
+ForeignExchange:
+  productType: Option
+  underlyer:
+    BasketUnderlyer:
+      - EUR/USD (weight: 33.3%)
+      - GBP/USD (weight: 33.3%)  
+      - JPY/USD (weight: 33.3%)
+  payout:
+    OptionPayout:
+      payoutFormula: MIN(return_EUR, return_GBP, return_JPY)
+      strike: 100 (indexed)
+      optionType: Call
+  settlementTerms:
+    settlementCurrency: USD
+    settlementType: Cash
+```
+
+EMIR reporting requires:
+
+- Each underlyer identified by CDM `Observable` with proper weighting
+- Payout formula explicitly stated (worst-of logic)
+- Settlement currency (matters for margining and CCP determination)
+
+Lite mode would send “FX_BASKET_OPTION” and regulators reject it for insufficient granularity.
+
+-----
+
+## The Pragmatic Trade-offs
+
+|Aspect                  |Lite Mode                             |Compliance Mode                                 |
+|------------------------|--------------------------------------|------------------------------------------------|
+|**Validation Cost**     |Minimal (identifier + basic structure)|Full CDM schema validation (~50-200ms per trade)|
+|**Transformation Logic**|Native → CDM mapping only             |CDM → CDM transitions with business rules       |
+|**Error Handling**      |Log and continue (non-blocking)       |Fail-fast with rejection (blocking)             |
+|**Storage Overhead**    |+15% (CDM identifiers/references)     |+200% (full CDM attributes + lineage)           |
+|**Audit Trail**         |Event captured, not interpreted       |Event captured WITH CDM business context        |
+|**Legal Standing**      |Supporting evidence                   |Contract of record                              |
+
+-----
+
+## Why This Two-Mode Strategy Works
+
+**Front Office Reality**: Traders book 500 FX options per day. Forcing full CDM compliance at booking adds 10 seconds per trade = 83 minutes of lost productivity daily = $250K annually in trader time for a medium desk.
+
+**Middle Office Reality**: Lifecycle processing handles 50 events per day (resets, exercises, terminations). These are high-stakes (legal disputes, audit inquiries). Spending 200ms on full CDM validation saves $2M in potential dispute/restatement costs.
+
+**The Bridge**: Lite-mode trades are “promoted” to compliance mode at first lifecycle event. Example:
+
+1. **T-0 (Booking)**: FX TARF in Lite mode, stored in 500ms
+1. **T+1 (First Fixing)**: System reads Lite representation, applies full CDM `Reset` primitive, writes back Compliance mode
+1. **T+1 onward**: All downstream distributions use Compliance representation
+
+This is the **“just-in-time compliance”** pattern: defer expensive validation until it’s required by the business process consuming it, not when the trader is trying to hit a market price.​​​​​​​​​​​​​​​​
