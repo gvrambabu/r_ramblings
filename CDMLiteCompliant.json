@@ -1,0 +1,387 @@
+Below is a **practitioner-level answer**, written from the perspective of an **ISDA CDM / FINOS domain expert**, and grounded in **real FX Options and IR Swaps trade-lifecycle behavior** at large banks (front-office → risk → ops → finance → regulatory).
+
+I’ll structure this as:
+
+1. **Why two CDM modes are necessary at enterprise scale**
+2. **Definition of CDM Lite vs CDM Compliance**
+3. **Explicit differentiation (what is allowed / disallowed)**
+4. **Concrete trade-event examples (non-trivial)**
+
+   * FX Option (Barrier + Partial Exercise + Novation)
+   * IR Swap (Amortizing swap + Rate reset + Compression + CCP clearing)
+5. **Architecture pattern & governance model**
+6. **Why this works in practice (cost, velocity, control)**
+
+---
+
+## 1. Why a single CDM mode does NOT work at scale
+
+Large enterprises face **two conflicting forces**:
+
+| Force                        | Reality                                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------------------- |
+| Front-office velocity        | Trades must be booked in milliseconds with minimal friction                               |
+| Lifecycle & regulatory rigor | Downstream processes require **full CDM semantic correctness**, determinism, auditability |
+
+If you force **full CDM compliance at booking time**:
+
+* FO adoption collapses
+* Latency increases
+* Schema churn blocks trading
+
+If you allow **free-form trades end-to-end**:
+
+* Lifecycle breaks
+* Recons explode
+* Regulatory reporting fails
+
+👉 **Two modes is not a compromise — it’s a control strategy.**
+
+---
+
+## 2. CDM Lite vs CDM Compliance — definitions
+
+### CDM Lite Mode (Intent Capture Mode)
+
+**Purpose**
+
+* Capture **economic intent** and **commercially binding facts**
+* Enable fast trade booking & event persistence
+* Defer normalization & enrichment
+
+**Design principle**
+
+> “Enough CDM to identify, replay, and transform later — not enough to process lifecycle.”
+
+**Where used**
+
+* Trade booking
+* Event journaling
+* Front-office state persistence
+* Pre-allocation & staging
+
+---
+
+### CDM Compliance Mode (Lifecycle Execution Mode)
+
+**Purpose**
+
+* Execute trade lifecycle deterministically
+* Distribute to risk, finance, collateral, clearing, and regulators
+* Serve as the **golden CDM event stream**
+
+**Design principle**
+
+> “Full CDM semantic completeness, event lineage, and process determinism.”
+
+**Where used**
+
+* Lifecycle orchestration
+* Clearing / CCP submissions
+* Confirmations & settlements
+* Regulatory reporting
+* Accounting & PnL
+
+---
+
+## 3. Explicit differentiation — Lite vs Compliance
+
+### A. Structural Differences
+
+| Dimension                    | CDM Lite      | CDM Compliance                             |
+| ---------------------------- | ------------- | ------------------------------------------ |
+| CDM object coverage          | Partial       | Full                                       |
+| EconomicTerms                | Often partial | Mandatory & complete                       |
+| PartyRole mapping            | Minimal       | Canonical (Buyer, Seller, Payer, Receiver) |
+| Observables (rates, fixings) | Referenced    | Resolved                                   |
+| Calculations                 | Deferred      | Explicit                                   |
+| Validation                   | Soft          | Hard                                       |
+| Lineage                      | Weak          | Strong (priorEvent → newEvent)             |
+| Determinism                  | No            | Yes                                        |
+| Regulatory safe              | No            | Yes                                        |
+
+---
+
+### B. Validation Strictness
+
+| Rule Type                | Lite | Compliance |
+| ------------------------ | ---- | ---------- |
+| Schema validity          | ✔    | ✔          |
+| Mandatory CDM fields     | ❌    | ✔          |
+| Event causal consistency | ❌    | ✔          |
+| Lifecycle legality       | ❌    | ✔          |
+| Cashflow determinism     | ❌    | ✔          |
+| Rebuildability           | ❌    | ✔          |
+
+---
+
+## 4. Trade-event examples (non-trivial)
+
+---
+
+## Example 1 — FX Barrier Option with Partial Exercise & Novation
+
+### Event 1: Trade Booking (CDM Lite)
+
+**What FO needs**
+
+* Capture deal economics quickly
+* No need to resolve barrier observation schedule yet
+
+**Lite CDM characteristics**
+
+* Product = FX Option (Barrier)
+* Barrier defined conceptually, not fully parameterized
+* No settlement schedules
+* No valuation dates
+
+```json
+{
+  "eventType": "Trade",
+  "mode": "Lite",
+  "product": {
+    "productType": "FxOption",
+    "optionType": "Call",
+    "barrierType": "Knock-In",
+    "strike": 1.1050,
+    "notional": 10000000,
+    "currencyPair": "EUR/USD",
+    "expiryDate": "2026-03-20"
+  },
+  "parties": {
+    "buyer": "Bank-A",
+    "seller": "Client-X"
+  }
+}
+```
+
+✅ Valid in Lite
+❌ Not lifecycle-executable
+
+---
+
+### Event 2: Barrier Observation Trigger (Compliance Only)
+
+**What changes**
+
+* Barrier observation occurs
+* Option state transitions
+
+**Compliance CDM requires**
+
+* Observation dates
+* Market data source
+* Deterministic barrier outcome
+
+```json
+{
+  "eventType": "BarrierObservation",
+  "mode": "Compliance",
+  "observation": {
+    "date": "2025-09-15",
+    "spot": 1.1120,
+    "barrierLevel": 1.1100,
+    "outcome": "KnockedIn"
+  },
+  "priorEventReference": "Trade-123"
+}
+```
+
+🚫 This event is **illegal** in Lite mode.
+
+---
+
+### Event 3: Partial Exercise (Compliance)
+
+Partial exercises **require CDM Compliance**, because:
+
+* Notional splits
+* New trade lineage
+* Cashflow recalculation
+
+```json
+{
+  "eventType": "Exercise",
+  "mode": "Compliance",
+  "exercise": {
+    "exerciseDate": "2026-03-20",
+    "exercisedNotional": 6000000,
+    "remainingNotional": 4000000
+  },
+  "priorEventReference": "BarrierObservation-456"
+}
+```
+
+---
+
+### Event 4: Novation of Remaining Position (Compliance)
+
+Novation introduces:
+
+* Party substitution
+* Risk transfer
+* Legal continuity
+
+🚫 Impossible in Lite.
+
+---
+
+## Example 2 — IR Swap (Amortizing, Clearing, Compression)
+
+---
+
+### Event 1: Amortizing IR Swap Booking (Lite)
+
+Front office books an amortizing swap but:
+
+* Detailed amortization schedule not yet fixed
+* Clearing intention unknown
+
+```json
+{
+  "eventType": "Trade",
+  "mode": "Lite",
+  "product": {
+    "productType": "InterestRateSwap",
+    "notional": "Amortizing",
+    "fixedRate": 3.75,
+    "index": "USD-SOFR",
+    "tenor": "10Y"
+  }
+}
+```
+
+---
+
+### Event 2: Clearing Election (Compliance)
+
+Clearing requires:
+
+* CCP party roles
+* Margining terms
+* Settlement calendars
+
+```json
+{
+  "eventType": "ClearingElection",
+  "mode": "Compliance",
+  "clearing": {
+    "ccp": "LCH",
+    "clearingStatus": "Accepted"
+  }
+}
+```
+
+---
+
+### Event 3: Rate Reset (Compliance)
+
+Rate resets are **pure CDM lifecycle events**.
+
+```json
+{
+  "eventType": "Reset",
+  "mode": "Compliance",
+  "reset": {
+    "resetDate": "2025-06-30",
+    "observedRate": 0.0532,
+    "calculationMethod": "CompoundedInArrears"
+  }
+}
+```
+
+---
+
+### Event 4: Compression (Compliance)
+
+Compression:
+
+* Terminates old swaps
+* Creates new netted swaps
+* Requires full lineage
+
+🚫 Cannot exist in Lite.
+
+---
+
+## 5. Architecture pattern (recommended)
+
+```
+[ Front Office ]
+     |
+     |  CDM Lite (Intent Events)
+     v
+[ Event Journal / Trade Store ]
+     |
+     |  Enrichment + Normalization
+     v
+[ CDM Compliance Engine ]
+     |
+     |  Validated CDM Event Stream
+     v
+[ Risk | Ops | Finance | Regulatory ]
+```
+
+### Key rule
+
+> **No downstream system should consume Lite events directly.**
+
+---
+
+## 6. Governance & controls
+
+### Mode transition rules
+
+* Lite → Compliance is **one-way**
+* Compliance events must reference Lite ancestry
+
+### KPIs
+
+* % of trades promoted to Compliance within T+0
+* # of lifecycle failures due to incomplete Lite capture
+* Rebuild success rate from Compliance stream
+
+---
+
+## 7. Why Lite + Compliance is the RIGHT answer
+
+### Business velocity
+
+* FO books fast
+* No CDM schema paralysis
+
+### Technical scalability
+
+* CDM adoption incremental
+* Legacy systems coexist
+
+### Control & audit
+
+* Compliance mode becomes **single source of truth**
+* Regulators get deterministic replay
+
+### Cost reduction
+
+* Less reconciliation
+* Fewer bespoke lifecycle engines
+
+---
+
+## Final takeaway
+
+**CDM Lite ≠ “bad CDM”**
+**CDM Compliance ≠ “slow CDM”**
+
+They represent:
+
+* **Lite** → *economic intent capture*
+* **Compliance** → *legal, financial, and regulatory truth*
+
+If you want, next we can:
+
+* Define **formal promotion rules** (Lite → Compliance)
+* Design a **CDM Event Maturity Model**
+* Map Lite vs Compliance to **Calypso / Murex / Summit replacements**
+* Define **API contracts for each mode**
+
+Just tell me where you want to go next.
