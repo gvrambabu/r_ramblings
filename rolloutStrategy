@@ -1,0 +1,35 @@
+Here is the **full detailed transcript** of Reid Hoffman's thread from the post you linked (https://x.com/reidhoffman/status/2014028797507449206), posted on January 21, 2026. The thread is a connected series of posts by @reidhoffman.
+
+I've numbered them in reading order (1 = first post, etc.) and included the exact text from each:
+
+1. **Main / Opening post**  
+   Enterprise AI strategy is backwards.  
+   
+   Most people are focusing on Chief AI Officers and pilot programs, when the real value is in the unglamorous work where organizations bleed time.  
+   
+   More thoughts:
+
+2. Start with the coordination layer. It’s the highest-leverage, lowest-drama place to deploy AI.  
+   
+   The biggest language workload inside any enterprise is the coordination layer: Meetings, notes, docs, action items, status updates, etc.
+
+3. The goal is turning the organization’s memory into something structured and retrievable, so you stop relying on whoever happened to be in the room to (1) achieve the objective discussed and (2) decide on who else should be informed.
+
+4. Enterprise AI gains compound if you make them shareable.  
+   
+   AI lives at the workflow level, and the people closest to the work know where the friction actually is. They’re the ones who will discover what should be automated, compressed, or totally redesigned.
+
+5. Also: Coding agents collapse the cost of analysis, which changes the kind of questions enterprises can afford to ask.
+
+6. Language models are unusually good at turning messy reality into structured inputs — extracting action items from complaints, turning transcripts into CRM-ready fields, converting unstructured text into something your systems can use.
+
+7. That’s one of the easiest automation targets inside the enterprise stack, and it’s a bridge between the human world and the database world.
+
+8. **Final / Closing post**  
+   The winners will be companies that build the muscle of day-to-day use early enough for the gains to compound. Start learning now, or watch the advantage slip away.  
+   
+   In short, maybe your goal isn’t just adoption, but collective AI understanding.
+
+That's the complete thread — 8 posts in total, all authored by Reid Hoffman in direct reply sequence. No additional continuation posts appear to exist in this specific thread based on current data.
+
+(For context: some replies from other users exist under the thread, e.g. people agreeing about structuring messy context or coordination friction being the real win, but they are not part of Hoffman's authored content.)
