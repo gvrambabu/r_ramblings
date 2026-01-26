@@ -2,8 +2,7 @@
 
 
 FX Payments EcoSystem generated as mermaid mindmap 
-
-```mermaid 
+```mindmap 
 mindmap
   root((FX Payments Ecosystem))
     Core Functionality
@@ -17,7 +16,7 @@ mindmap
         Live FX rate execution
         Guaranteed rates
         Mobile capabilities
-        AI enhancements (e.g., Chat, Search)
+        ["AI enhancements (Chat, Search)"]
         Netting for settlements
     Other Banks and Providers
       Large Banks
@@ -34,38 +33,38 @@ mindmap
         Wise
           Low fees
           Fast transfers
-        PayPal/Xoom
+        ["PayPal / Xoom"]
           Instant transfers
           E-commerce focus
         Western Union
           Remittances
           Cash payouts
-        Others (OFX, TorFX)
+        ["Others (OFX, TorFX)"]
           Zero-fee models
     International Channels
       SWIFT
         Secure messaging
-        Evolving for speed (G20 targets)
+        ["Evolving for speed (G20 targets)"]
       Alternatives
-        Domestic/Regional (SEPA, RTP)
-        Card Networks (Visa/Mastercard)
-        Fintech Platforms (Wise, Airwallex)
-        Blockchain/Stablecoins (Ripple, USDC)
+        ["Domestic / Regional (SEPA, RTP)"]
+        ["Card Networks (Visa / Mastercard)"]
+        ["Fintech Platforms (Wise, Airwallex)"]
+        ["Blockchain / Stablecoins (Ripple, USDC)"]
     Key Trends
-      Digitization & AI
+      Digitization and AI
       Real-time payments
       Blockchain adoption
       Digital wallets
-      Sustainability (Green FX)
+      ["Sustainability (Green FX)"]
       Geopolitical diversification
     Similarities
-      Compliance (AML/KYC)
+      ["Compliance (AML/KYC)"]
       Multi-channel integration
       Risk management tools
       Transparent pricing
       Real-time tracking
     Challenges
-      High costs & fees
+      High costs and fees
       Speed variability
       FX volatility
       Cybersecurity threats
@@ -77,12 +76,12 @@ mindmap
       Finastra
         Fusion Payments
       FIS
-        Horizon/IBS for FX
+        ["Horizon / IBS for FX"]
       Cloud environments
     Collaboration Pathways
       Open APIs
-      Partnerships (e.g., blockchain)
+      ["Partnerships (e.g., blockchain)"]
       Shared platforms
       Regulatory sandboxes
       AI tool co-development
-      Hybrid systems (FX-RTP)
+      ["Hybrid systems (FX-RTP)"]
