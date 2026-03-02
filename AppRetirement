@@ -1,3 +1,60 @@
+GitNexus and CodeAtlas : 
+
+https://github.com/abhigyanpatwari/GitNexus
+
+
+Pass 1: Structure & AST Parsing
+GitNexus walks your file tree and uses Tree-sitter to parse every file into an Abstract Syntax Tree (AST). It identifies every function, class, and interface. For example, it structurally extracts processPayment as a discrete Function node belonging to payment.ts.
+Pass 2: Import & Call Resolution
+Next, it looks inside the ASTs for execution logic. It sees that checkout.ts imports payment.ts, and that completeCheckout() explicitly invokes processPayment(). GitNexus creates hard edges in its embedded graph database (KuzuDB) connecting these nodes.
+Pass 3: Clustering & Processes
+Finally, GitNexus runs community detection algorithms (like Louvain/Leiden) to group related symbols. It realizes that checkoutRouter -> completeCheckout -> processPayment is a continuous execution chain. It tags this entire chain as a functional process (e.g., "CheckoutFlow").
+The Output: What AntiGravity or Copilot Sees
+Once this map is built, your AI agent is given access to specific tools via the Model Context Protocol (MCP). If your AntiGravity agent is tasked with modifying the payment logic, it will autonomously call the GitNexus impact tool to check the "blast radius" before writing any code.
+
+
+Why This Radically Improves the AI
+• Zero Guesswork: Instead of the LLM receiving a massive dump of raw code and trying to infer relationships, GitNexus pre-computes the architecture. The AI knows for a fact that changing the signature of processPayment will break line 45 in checkout.ts.
+• Token Efficiency: In a traditional setup, an agent might burn through 5 or 6 different search queries (find callers, check imports, filter tests, read files) just to build a mental model of this one function. GitNexus hands the agent the complete, 360-degree context in a single, highly compressed query.
+• Safe Multi-File Refactors: Because AntiGravity operates autonomously, this graph data acts as a guardrail. The agent can map out all affected files in Depth 1 and Depth 2 and add them to its execution plan before it starts editing, ensuring no downstream dependencies are left broken.
+
+
+Integrating Agentic RAG with MCP transforms LLM systems from static responders into production grade decision engines.
+
+Traditional RAG retrieves context and generates answers. Agentic RAG adds planning, tool execution, verification, and adaptive reasoning. MCP standardizes how agents discover tools, validate schemas, authenticate, and execute actions across heterogeneous systems.
+
+👉 Architecture highlights
+ - Planner Agent decomposes intent into executable steps
+ - Retriever Agent performs hybrid search using vectors plus lexical ranking
+ - Tool Agent invokes structured tools through MCP contracts
+ - Writer Agent synthesizes grounded responses with citations
+ - Critic Agent validates correctness, policy compliance, and hallucination risk
+
+MCP layer acts as a universal tool protocol. Instead of hardcoding integrations, agents dynamically select capabilities from a registry using schema defined contracts and capability tags. This design removes tight coupling and enables plug and play enterprise tooling.
+
+Example production scenario
+ - User asks for weekly revenue anomaly analysis.
+ - Planner Agent breaks task into data fetch, statistical analysis, explanation.
+ - Retriever Agent pulls financial context from vector store.
+ - Tool Agent calls Data MCP server to query warehouse.
+ - Compute MCP server runs anomaly detection notebook.
+ - Writer Agent summarizes insights.
+
+Critic Agent verifies numbers against source of truth.
+Final output includes validated metrics, explanation, and audit trail.
+
+👉 Production readiness depends on controls layered across the stack
+ - RBAC and attribute policies for access
+ - Guardrails against prompt injection
+ - Secrets vault integration
+ - Observability with traces and eval harness
+ - Rate limiting and caching for cost stability
+
+Agentic RAG plus MCP represents a shift from prompt engineering to system engineering.
+
+
+---------
+
 Create a comprehensive PR/FAQ document for a proposed software product or feature, following Amazon's "Working Backwards" process. The document should include:
 
 A one-page press release that addresses:
