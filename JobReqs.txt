@@ -1,0 +1,29 @@
+Job Title: Technology Principal Engineer (Executive Director Level) – Strategic Trade Management Solutions Location: Charlotte, NC or New York, NY (Hybrid) Line of Business: Capital Markets Technology
+In this role, what will the candidate do As a Principal Engineer at Wells Fargo, you will architect, build, and lead the next-generation Strategic Trade Management platform for our Fixed Income, Currencies & Commodities (FICC) and Derivatives businesses. This is a rare, high-visibility opportunity to modernize and transform our core trade lifecycle capabilities at enterprise scale — combining ultra-low-latency execution with complex derivative modeling, real-time valuations, and intelligent trade event orchestration.
+You will own the end-to-end technical vision for a vertically integrated system-of-record that rivals the industry’s most advanced platforms (think Quartz at Bank of America and Athena at JPM Chase), while introducing agentic, AI-augmented workflows that accelerate business growth. Working directly with trading desks, quant teams, and senior technology leadership, you will drive the modernization journey that supports double-digit business expansion, regulatory agility, and next-generation client experience in one of the most dynamic capital markets environments.
+Job Responsibilities
+	•	Technical Vision & Architecture Leadership Define and execute the multi-year architecture roadmap for a unified Strategic Trade Management platform covering trade capture, lifecycle events, risk & P&L calculations, collateral, margining, and downstream settlement.
+	•	Hands-on Build & Delivery Lead by example — design, code, and deliver production-grade microservices using Java, gRPC, Python/FastAPI, service mesh (Istio/Linkerd), reactive architectures, and Micro Front-End patterns. Integrate agentic development practices with GitHub Copilot and custom LLM agents to accelerate delivery velocity by 3–5x.
+	•	Low-Latency & Complex Derivative Expertise Engineer sub-millisecond trade processing paths for exotic derivatives, rates, credit, FX, and commodities while maintaining strict non-functional requirements (NFRs) for throughput, resilience, data consistency, and auditability.
+	•	Modernization & Transformation Lead the decommissioning of legacy monolithic systems and the migration to a cloud-native, vertically integrated system-of-record with embedded agentic intelligence for trade-event modeling, exception handling, and real-time valuations.
+	•	Influence & Stakeholder Leadership Partner with Executive Directors across Trading, Quant, Risk, Operations, and Compliance to translate complex business needs into scalable technology solutions. Influence enterprise standards, architecture review boards, and capital markets platform strategy.
+	•	Scalability & Growth Enablement Design the platform to support aggressive business growth (new asset classes, increased volumes, multi-region expansion) while delivering measurable improvements in time-to-market, cost-to-serve, and risk transparency.
+	•	Mentorship & Engineering Excellence Mentor senior engineers and technologists; establish best practices for secure, observable, and testable code; drive adoption of modern engineering disciplines across the Capital Markets Technology organization.
+Required Qualifications
+	•	10+ years of progressive experience in Capital Markets Technology with deep domain expertise in FICC and derivative trade lifecycle management, valuations, and event processing
+	•	Proven track record designing and delivering low-latency, high-throughput trading platforms at scale (sub-millisecond performance critical)
+	•	Expert-level proficiency in Java (Spring Boot, reactive), gRPC, Python/FastAPI, service mesh, Micro Front-Ends, and cloud-native architectures (AWS/GCP preferred)
+	•	Demonstrated experience leading large-scale modernization and transformation programs in a regulated financial services environment
+	•	Strong understanding of non-functional requirements (latency, scalability, resilience, observability, security, compliance) and how to operationalize them in production
+	•	Bachelor’s or Master’s degree in Computer Science, Engineering, or related quantitative discipline (or equivalent experience)
+	•	Executive-level communication and influence skills; ability to present technical strategies to senior leadership and trading desks
+Desired Qualifications
+	•	Direct hands-on experience with industry-leading platforms such as Bank of America Quartz, JPM Chase Athena, or equivalent strategic trade management systems
+	•	Experience building vertical systems-of-record augmented with agentic AI/ML solutions and GitHub Copilot-style development workflows
+	•	Deep knowledge of complex derivatives pricing models, trade-event state machines, and real-time risk & collateral engines
+	•	Familiarity with Wells Fargo (or peer bank) capital markets technology standards, risk frameworks, and regulatory expectations (Dodd-Frank, EMIR, CFTC, SEC)
+	•	Prior experience at Executive Director or equivalent level in a top-tier investment bank or bulge-bracket firm
+	•	Passion for mentoring high-performing engineering teams and driving cultural transformation toward modern, agile, and agentic development practices
+This role offers the unique combination of deep technical ownership, executive-level influence, and direct impact on one of Wells Fargo’s fastest-growing and most strategically important businesses. If you are ready to build the future of capital markets technology — low-latency, intelligent, and built for growth — we want to hear from you.
+
+
