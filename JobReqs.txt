@@ -130,6 +130,68 @@ Desired Qualifications
 • Strong written communication skills; comfort producing architecture decision records, technical proposals, and program-level documentation that can be read and acted on by both engineering leadership and technology executives.
  
 
- 
+ -----------
+-------------------- Lead Engineer Version 
+
+
+This job description is tailored for a Lead Specialty Software Engineer (typically VP level) at Wells Fargo. While the Principal role focuses on the "North Star" and organizational influence, this role is the engine room of the transformation—focused on elite-level execution, rapid prototyping, and pioneering the "Agentic" developer workflow within the FICC Strategic Trade Management space.
+Lead Specialty Software Engineer: Agentic Systems & Trade Management
+Locations: Charlotte, NC | New York, NY
+Line of Business: Capital Markets Technology – FICC & Derivatives
+1. In this role, what will the candidate do?
+As a Lead Specialty Software Engineer, you will be a hands-on technical powerhouse responsible for building the core components of our next-generation Strategic Trade Management platform. This is a role for an engineer who thrives in the IDE. You will bridge the gap between complex financial logic (Trade Event Models, Valuations) and cutting-edge software engineering.
+You will be at the forefront of the bank’s shift toward Agentic Development. You aren't just using AI to write boilerplate; you are building autonomous agents to handle trade exceptions, automate regression testing for complex derivatives, and optimize low-latency data flows. You will be the primary driver of engineering velocity, utilizing tools like Cursor, Devin, and Claude to redefine what "high-performance delivery" looks like in a regulated environment.
+2. Job Responsibilities
+ * Elite Hands-on Coding: Spend 70–80% of your time in the code. You will build and optimize high-throughput services using Java, gRPC, and Python (FastAPI). You will implement the Micro Front End (MFE) patterns that bring our strategic trade screens to life.
+ * Agentic Framework Development: Design and deploy internal "Agentic Solutions" that sit within the Trade Life Cycle. This includes building custom agents (using LangChain, Semantic Kernel, or proprietary frameworks) that can reason through trade breaks, valuation discrepancies, and lifecycle events.
+ * Pioneering AI-First Workflows: Lead the team’s adoption of Next-Gen development tools. You will be the resident expert in leveraging Cursor, Devin, and Claude 3.5/4 to accelerate refactoring legacy codebases into modern, service-mesh-ready architectures.
+ * Execution of Strategic Vision: Take high-level architectural blueprints from Principal Engineers and turn them into resilient, production-grade reality. You will ensure that "Low Latency meets Complex Trading" by writing highly optimized, non-blocking code.
+ * NFR & Quality Engineering: Take personal accountability for the stability and performance of your services. You will use GitHub CoPilot and agentic testing tools to ensure 100% test coverage and sub-millisecond response times for critical trade path APIs.
+ * Technical Mentorship: Act as a "Force Multiplier" for the squad. You will conduct deep-dive code reviews and run "Agentic Coding" workshops to upskill the broader engineering team on prompt engineering and LLM-integrated development.
+3. Required Qualifications
+ * 8+ years of Software Engineering experience, with a proven track record of delivering complex, multi-tier systems in a high-pressure environment.
+ * Advanced Coding Proficiency: Expert-level command of Java (Spring Boot, Multithreading) and Python (FastAPI, Pydantic).
+ * FICC Domain Knowledge: Strong understanding of the Trade Life Cycle, System of Record (SoR) patterns, and the mechanics of Fixed Income or Derivative products.
+ * Modern Middleware: Hands-on experience with gRPC, Kafka, and Service Mesh architectures.
+ * AI Tooling Expertise: Demonstrated experience using GitHub CoPilot and LLMs (Claude, GPT-4) to significantly increase individual and team output.
+4. Desired Qualifications
+ * Agentic Development: Experience building or fine-tuning autonomous agents or "Chain of Thought" workflows for data reconciliation or system monitoring.
+ * Next-Gen IDEs: Deep familiarity with Cursor or Devin for accelerated software development and automated debugging.
+ * FinTech Platform Experience: Prior experience working on or migrating away from platforms like Athena, Quartz, or SecDB.
+ * Front-End Versatility: Experience with React/TypeScript in a Micro Front End (MFE) architecture to support unified trader workflows.
+ * Low-Latency Mindset: Understanding of kernel bypass, memory management, or zero-copy networking for high-frequency data environments.
+Would you like me to create a technical screening guide or a "Day in the Life" summary to help interviewers identify candidates who actually possess these "Agentic" skills?
+
+
+
+Job Title: Technology Lead Specialty Software Engineer – Strategic Trade Management Solutions Location: Charlotte, NC or New York, NY (Hybrid) Line of Business: Capital Markets Technology
+In this role, what will the candidate do As a Lead Specialty Software Engineer at Wells Fargo, you will be a hands-on coding powerhouse building the next-generation Strategic Trade Management platform for our FICC and Derivatives businesses. This is a high-impact technical role focused on rapid, production-grade delivery — leveraging cutting-edge agentic development tools (GitHub Copilot, Claude, Cursor, Devin, and equivalent AI coding agents) to accelerate feature development, automate complex trade-event logic, and modernize our low-latency trade lifecycle systems.
+You will spend the majority of your time coding, designing, and shipping mission-critical microservices that handle ultra-low-latency execution, complex derivative valuations, real-time risk calculations, and intelligent trade orchestration. Working side-by-side with trading desks and senior engineers, you will directly contribute to the platform that powers business growth, regulatory compliance, and the transformation of legacy systems into a scalable, cloud-native system-of-record.
+Job Responsibilities
+	•	Hands-On Coding & Rapid Delivery Lead by coding — design, develop, test, and deploy production microservices using Java (Spring Boot/reactive), gRPC, Python/FastAPI, service mesh, and Micro Front-End patterns. Leverage GitHub Copilot, Claude, Cursor, Devin, and custom agentic workflows daily to generate, refactor, and optimize code at 3–5x velocity while maintaining enterprise quality standards.
+	•	Agentic Build-Out & AI-Augmented Development Build and integrate intelligent agents for trade-event modeling, exception handling, real-time valuations, collateral calculations, and automated lifecycle orchestration. Extend agentic capabilities across the platform using LLM-driven code generation, automated testing, and self-healing pipelines.
+	•	Low-Latency & Complex Derivative Implementation Hands-on engineer sub-millisecond trade processing paths and complex derivative state machines while enforcing strict non-functional requirements (NFRs) for latency, throughput, resilience, observability, and auditability in every commit.
+	•	Modernization & Platform Build-Out Actively migrate legacy components to a modern, vertically integrated system-of-record. Implement reactive architectures, event-driven trade lifecycle engines, and cloud-native patterns that support aggressive business growth and new asset-class onboarding.
+	•	Technical Influence & Collaboration Partner with Principal Engineers, architects, and business stakeholders to translate requirements into clean, scalable code. Participate in design reviews, influence platform standards, and mentor other engineers on agentic development best practices.
+	•	Quality, Observability & Production Ownership Own end-to-end delivery — write comprehensive unit/integration tests, implement observability (metrics, tracing, logging), ensure security/compliance controls, and support production deployments and incident resolution.
+	•	Engineering Excellence & Tool Adoption Champion the adoption of AI coding agents (Copilot, Claude, Cursor, Devin equivalents) across the team; continuously improve development workflows, CI/CD pipelines, and code quality metrics.
+Required Qualifications
+	•	7+ years of hands-on software engineering experience in Capital Markets Technology, with strong focus on FICC/derivatives trade lifecycle, valuations, or low-latency trading systems
+	•	Expert-level coding proficiency in Java (Spring Boot, reactive), gRPC, Python/FastAPI, service mesh architectures, and modern cloud-native patterns
+	•	Demonstrated experience using AI coding agents (GitHub Copilot, Claude, Cursor, Devin, or equivalent) to accelerate real-world production delivery
+	•	Proven ability to deliver high-throughput, low-latency systems while meeting enterprise NFRs (performance, resilience, security, audit)
+	•	Strong understanding of microservices, event-driven architectures, and trade-event state machines in a regulated financial environment
+	•	Bachelor’s or Master’s degree in Computer Science, Engineering, or related quantitative discipline (or equivalent experience)
+	•	Excellent communication and collaboration skills; ability to work effectively with trading desks and cross-functional teams
+Desired Qualifications
+	•	Direct experience contributing to strategic trade management platforms similar to Bank of America Quartz or JPM Chase Athena
+	•	Hands-on background building agentic AI solutions and vertical systems-of-record for trade lifecycle and risk management
+	•	Familiarity with Wells Fargo Capital Markets technology stack, risk frameworks, and regulatory requirements (Dodd-Frank, EMIR, CFTC)
+	•	Prior experience at Lead or equivalent level in a top-tier investment bank
+	•	Passion for mentoring through pair-programming and agentic development practices; track record of driving team-wide adoption of modern tools like Cursor and Devin-style agents
+This is a true hands-on coding leadership role where you will ship production features daily, harness the power of AI agents to move at unprecedented speed, and directly shape the future of low-latency, intelligent trade management at Wells Fargo. If you love writing high-quality code, pushing the boundaries with Copilot/Claude/Cursor/Devin, and delivering scalable platforms that power real trading businesses — this is your opportunity.
+
+
+
 
 
