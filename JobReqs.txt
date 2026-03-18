@@ -27,3 +27,109 @@ Desired Qualifications
 This role offers the unique combination of deep technical ownership, executive-level influence, and direct impact on one of Wells Fargo’s fastest-growing and most strategically important businesses. If you are ready to build the future of capital markets technology — low-latency, intelligent, and built for growth — we want to hear from you.
 
 
+gemini Version : 
+
+This job description is designed to reflect the seniority of an Executive Director (ED) level role within Wells Fargo’s Capital Markets Technology division. It emphasizes the shift from legacy vertical silos to a unified, horizontal Strategic Trade Management platform, drawing on the architectural paradigms of industry benchmarks like Athena and Quartz.
+Principal Engineer: Strategic Trade Management (Executive Director)
+Locations: Charlotte, NC | New York, NY
+Line of Business: Capital Markets Technology – FICC & Derivatives
+1. In this role, what will the candidate do?
+As a Principal Engineer and Executive Director within Capital Markets Technology, you will be a primary architect and catalyst for the modernization of our FICC (Fixed Income, Currencies, and Commodities) ecosystem. You are not just maintaining systems; you are engineering the future "System of Record" for the bank.
+You will lead the design and build-out of a Strategic Trade Management Solution—a high-throughput, low-latency platform designed to handle the entire Trade Life Cycle for complex derivatives. This is a unique opportunity to move the firm away from fragmented legacy architectures toward a unified, scalable platform that integrates sophisticated Trade Event Models with modern Agentic workflows. You will bridge the gap between complex quantitative trading requirements and elite-level software engineering, ensuring our platform supports rapid business growth and radical transparency in valuations and risk.
+2. Job Responsibilities
+ * Architectural Stewardship: Define the North Star architecture for a horizontal FICC Trade Management platform. You will design "Vertical Systems of Record" that leverage gRPC and Service Mesh to ensure seamless, high-speed communication across global instances.
+ * Executing Vision & Transformation: Lead the migration from monolithic, siloed trade stores to a modern, event-driven architecture. You will translate business growth objectives into technical roadmaps that prioritize scalability and reduced time-to-market for new financial products.
+ * Hands-on Engineering: While this is a leadership role, you will lead by example. You will be expected to dive into the code—developing core frameworks in Java and Python, optimizing FastAPI endpoints, and implementing Micro Front End (MFE) patterns for a unified trader desktop experience.
+ * Agentic Solutions & Innovation: Integrate Agentic AI solutions into the development lifecycle and the platform itself. You will pioneer the use of GitHub CoPilot for agentic development to accelerate engineering velocity and deploy LLM-based agents to monitor trade health and automate exception management.
+ * NFR Leadership: Own the "Non-Functional Requirements." You will be accountable for the platform’s resiliency, sub-millisecond latency, and global consistency. You will ensure that the platform meets the highest standards of regulatory compliance and risk control.
+ * Influencing & Mentorship: Act as a technical consultant to senior business stakeholders and a mentor to Distinguished Engineers. You will foster a culture of "Engineering Excellence," pushing the boundaries of what is possible in a regulated banking environment.
+3. Required Qualifications
+ * 10+ years of Software Engineering experience, with at least 5 years in a Principal or Lead Architect capacity within a global Capital Markets environment.
+ * Expertise in FICC Trade Life Cycle: Deep domain knowledge of Fixed Income, Currencies, and Commodities, including trade capture, valuation models, and lifecycle event management.
+ * High-Performance Stack: Proven mastery of Java (concurrency, JVM tuning) and Python (FastAPI, data science libraries).
+ * Distributed Systems: Extensive experience with gRPC, Service Mesh (Istio/Linkerd), and high-performance messaging protocols.
+ * Academic Background: Bachelor’s or Master’s degree in Computer Science, Financial Engineering, or a related quantitative field.
+4. Desired Qualifications
+ * Platform Pedigree: Prior experience building or significantly contributing to industry-leading platforms such as JPM Athena, BofA Quartz, or Goldman Sachs SecDB.
+ * Complex Derivatives Knowledge: Understanding of pricing and risk for complex derivatives (Swaps, Options, Exotics) and how they translate into trade event models.
+ * Agentic Development: Experience implementing GitHub CoPilot or similar AI-assisted engineering tools at scale to drive "Agentic Development" workflows.
+ * Modern UI Patterns: Experience with Micro Front Ends to decouple the trader UI and allow for independent module deployment.
+ * Cloud Native: Familiarity with deploying mission-critical financial systems on hybrid cloud environments (Azure/GCP/AWS) with a focus on data residency and sovereignty.
+Would you like me to refine the specific focus on the "Agentic Solutions" section to better align with a particular asset class, or should I help you draft a cover letter for this type of role?
+
+
+Claude Version : 
+
+Wells Fargo Capital Markets Technology is undertaking one of the most consequential technology transformations in its history: the ground-up modernization of its Fixed Income, Currencies, and Commodities trading infrastructure. This is not incremental improvement. We are retiring a generation of legacy systems and building a strategic, cloud-enabled FICC Trading Platform designed to handle the full complexity of modern derivatives trading — with the latency profile, resilience, and regulatory precision that global capital markets demand.
+This Principal Engineer role sits at the center of that effort. You will be both an architect and a hands-on builder. You will define the technical direction of core platform components, partner with trading desks, risk, and data leadership to shape what gets built, and then roll up your sleeves and build it alongside a team of senior engineers. The scope spans low-latency execution, complex derivatives trade life cycle management, API and business object modeling, streaming data pipelines, and integration with Risk and Data Platforms.
+If you have built mission-critical trading systems at the depth and scale this work demands — and you want the mandate to do it again at an institution with the market presence, investment appetite, and business ambition to make it matter — this is a rare opportunity.
+ 
+
+In This Role, You Will
+You will own technical architecture and delivery for foundational components of the FICC Strategic Trading Platform — a multi-year program that spans instrument coverage across rates, credit, FX, and commodities, serving flow and structured derivatives desks. Your day-to-day will blend strategic design with direct engineering contribution.
+• Lead the architecture and hands-on development of a modern, event-driven Trade Life Cycle Management platform covering trade capture, enrichment, booking, confirmation, and settlement workflows across asset classes.
+• Define and own the API contract strategy for trading platform services — gRPC-first, with REST/OpenAPI surfaces for downstream consumers — establishing business object models that serve as the system of record for trade state and reference data.
+• Design and build low-latency, high-throughput service components in Java, targeting sub-millisecond SLOs for pricing, position, and risk query paths, using service mesh patterns and purpose-fit infrastructure choices.
+• Drive the platform’s integration with Risk and Data Platforms — publishing structured trade events to downstream consumers via Apache Kafka-based streaming infrastructure and Data Mesh-aligned domain ownership models.
+• Establish and enforce Non-Functional Requirements (NFRs) — latency budgets, availability targets, disaster recovery posture, observability standards, and capacity modeling — as first-class engineering deliverables.
+• Partner directly with Quantitative Researchers, Structurers, and Front Office Technology leads to translate complex derivatives trade logic into accurate, maintainable platform models.
+• Shape the CICD and developer experience for the platform — trunk-based development, automated testing gates, infrastructure-as-code — and raise engineering craft standards across the team.
+• Leverage GitHub Copilot and agentic development tooling to accelerate delivery, and help define how the team responsibly adopts AI-assisted engineering at scale.
+• Serve as a senior technical voice in program governance, architectural review boards, and cross-CTO design sessions — with the credibility and directness to challenge direction when the evidence calls for it.
+ 
+ 
+
+Job Responsibilities
+Architecture & Technical Vision
+• Own end-to-end system architecture for assigned platform domains, producing ADRs (Architecture Decision Records) that reflect explicit trade-off reasoning, not just decisions.
+• Design service boundaries aligned to trade life cycle domains — trade capture, valuations, risk aggregation, position management — with clean contracts and well-reasoned data ownership.
+• Lead architecture for streaming and event-driven components, including event schema governance, topic design, consumer group strategy, and exactly-once guarantees where required.
+• Define the approach to low-latency system design: memory models, threading strategies, I/O patterns, and benchmarking methodology to validate performance against target SLOs.
+• Evaluate and recommend infrastructure and tooling choices — from JVM tuning to service mesh configuration to cloud-native data services — with a bias toward operational simplicity and proven fit-for-purpose solutions.
+Executing the Vision — Hands-On Build
+• Write production-grade Java services, covering core business logic, gRPC service implementations, Kafka producers/consumers, and integration layer components.
+• Develop Python-based tooling and FastAPI services where appropriate for operational workflows, data validation pipelines, and internal developer tooling.
+• Build and review Micro Frontend components that surface trading platform data — working with UI engineers to ensure API design serves front-end consumption patterns cleanly.
+• Own code quality and review standards within your domain; lead by example in testing discipline, including unit, integration, and contract testing for distributed service boundaries.
+• Engage directly with GitHub Copilot-assisted development workflows; help the team develop judgment on where AI-generated code requires rigorous review versus where it accelerates boilerplate delivery safely.
+Non-Functional Requirements & Operational Resilience
+• Define SLOs, SLIs, and error budgets for platform services; ensure observability — structured logging, distributed tracing, metric dashboards — is built in, not bolted on.
+• Design for failure: circuit breakers, bulkhead isolation, graceful degradation paths, and chaos engineering practices to validate resilience claims before they matter in production.
+• Lead capacity planning and performance modeling efforts, working with infrastructure teams to right-size deployments and anticipate growth from new business or increased market activity.
+• Ensure DR posture meets capital markets recovery time requirements, including active/passive failover designs and tested recovery runbooks.
+Technical Influence & Team Elevation
+• Mentor senior and mid-level engineers on distributed systems design, derivatives domain modeling, and performance engineering — building durable capability in the organization, not just delivering a project.
+• Drive alignment across engineering squads on shared platform standards: API design conventions, data contract formats, error handling patterns, and deployment practices.
+• Contribute to hiring: define what senior looks like for this program, participate in technical interviews, and help build a team whose depth matches the ambition of what we are building.
+• Represent Capital Markets Technology in firmwide architecture forums, vendor evaluations, and CTO-level reviews; communicate technical complexity with the clarity and confidence that earns trust from both engineering and business stakeholders.
+ 
+ 
+
+Required Qualifications
+• 12 or more years of software engineering experience, with at least 6 years in capital markets or investment banking technology, covering trading systems, risk platforms, or derivatives infrastructure.
+• Deep, demonstrable expertise in Java — concurrent programming, JVM performance tuning, GC behavior at latency-sensitive workloads — and a clear track record of building production services that operate at the performance and availability levels that trading businesses require.
+• Hands-on experience designing and building event-driven, streaming platforms using Apache Kafka or equivalent — including schema design, consumer architecture, and operational management in production environments.
+• Strong command of gRPC and protobuf-based API design, with experience building service-to-service contracts that survive long-term evolution without breaking consumers.
+• Practical knowledge of trade life cycle across at least two of: Rates, Credit, FX, Commodities — covering trade booking models, economic event processing, trade state machines, and downstream risk/P&L consumption.
+• Experience leading system architecture for complex, multi-team programs — not just writing design documents, but driving alignment, resolving technical disagreements, and maintaining architectural coherence across a distributed delivery organization.
+• Familiarity with derivatives valuation concepts — not necessarily quant-depth, but sufficient to model trade business objects accurately and engage credibly with quant and risk technology counterparts.
+• Experience with CICD tooling, trunk-based development practices, and test automation strategies appropriate for distributed financial systems.
+• Bachelor’s degree or higher in Computer Science, Engineering, Mathematics, or a closely related technical discipline; equivalent practical experience considered where depth of systems expertise is evident.
+ 
+ 
+
+Desired Qualifications
+• Direct experience with platform modernization at a Tier 1 bank or major FinTech — particularly programs involving retirement of legacy trading systems and migration of live trade books to new infrastructure without business disruption.
+• Familiarity with strategic FICC platform architectures at peer institutions, including conceptual knowledge of platform patterns used in comparable large-scale trading infrastructure programs.
+• Experience with Data Mesh design principles and domain-oriented data ownership — including practical knowledge of how trade and risk data domains are partitioned and published to enterprise data consumers.
+• Proficiency in Python and FastAPI for operational tooling, data pipeline components, or internal developer surface APIs.
+• Hands-on experience with service mesh technologies — Istio, Envoy, or equivalent — in production financial services environments, including mTLS, traffic management, and observability integration.
+• Experience designing or working with Micro Frontend architectures in capital markets — particularly trader-facing UIs that consume high-frequency streaming data from platform APIs.
+• Practical experience with GitHub Copilot or similar AI-assisted development tooling in an enterprise engineering organization, including developing team norms around responsible adoption.
+• Exposure to cloud-native infrastructure patterns on AWS, Azure, or GCP in a capital markets context — particularly around latency-sensitive workload placement, network topology, and cloud-to-on-prem hybrid designs.
+• Strong written communication skills; comfort producing architecture decision records, technical proposals, and program-level documentation that can be read and acted on by both engineering leadership and technology executives.
+ 
+
+ 
+
+
