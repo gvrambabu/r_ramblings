@@ -1,3 +1,16 @@
+Pitch from Equities  : Wells Fargo is building the next generation of its Equity Derivatives trade capture and lifecycle platform, and we’re looking for a senior engineering leader who’s energized by front‑office scale, low‑latency systems, and complex derivatives workflows.
+In this role, you’ll lead engineering teams that power mission‑critical capabilities across trade capture, lifecycle automation, pricing, risk, STP, and controls for global equity derivatives—including Flow, Delta One, Equity Finance, Convertibles, Corporate Derivatives, and Structured Notes.
+If you’re passionate about:
+ Modernizing high‑throughput, distributed platforms
+ Architecting cloud‑aligned, low‑latency microservices
+ Embedding GenAI‑enabled automation into core trading systems
+ Partnering directly with trading, quants, operations, and risk
+ Leading high‑performing engineering teams in a fast‑moving front‑office environment
+…this is a rare opportunity to shape the strategic trajectory of a tier‑one derivatives technology stack. 
+
+
+
+
 Job Title: Technology Principal Engineer (Executive Director Level) – Strategic Trade Management Solutions Location: Charlotte, NC or New York, NY (Hybrid) Line of Business: Capital Markets Technology
 In this role, what will the candidate do As a Principal Engineer at Wells Fargo, you will architect, build, and lead the next-generation Strategic Trade Management platform for our Fixed Income, Currencies & Commodities (FICC) and Derivatives businesses. This is a rare, high-visibility opportunity to modernize and transform our core trade lifecycle capabilities at enterprise scale — combining ultra-low-latency execution with complex derivative modeling, real-time valuations, and intelligent trade event orchestration.
 You will own the end-to-end technical vision for a vertically integrated system-of-record that rivals the industry’s most advanced platforms (think Quartz at Bank of America and Athena at JPM Chase), while introducing agentic, AI-augmented workflows that accelerate business growth. Working directly with trading desks, quant teams, and senior technology leadership, you will drive the modernization journey that supports double-digit business expansion, regulatory agility, and next-generation client experience in one of the most dynamic capital markets environments.
