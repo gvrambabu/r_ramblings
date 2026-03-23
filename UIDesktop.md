@@ -564,3 +564,91 @@ Swaps Desk
 Would you like me to provide a sample TypeScript manifest definition for the MFE Registry or a gRPC service definition for the Registration API?
 
 
+--------
+
+# Micro Frontend (MFE) Registry Storefront Approach  
+**FICC Trading Desktop Ecosystem**  
+**Built on OpenFin Desktop + OpenFin Workspaces**  
+**Tier-1 Investment Bank – Enterprise Architecture**
+
+## 1. Vision and Objectives
+
+**Vision**  
+A single, governed storefront where any FICC product team can register independently deployable MFEs that instantly become discoverable, composable, and interoperable inside trader workspaces — while the Platform team retains full control over security, latency, entitlements, and regulatory compliance.
+
+**Objectives**  
+- Federate MFE ownership to 12+ product squads (FX, Rates, Credit, Commodities, Swaps) without creating 12+ siloed desktops.  
+- Reduce new capability onboarding from 8–12 weeks to <5 business days.  
+- Guarantee <50 ms FDC3 intent latency and <10 ms data-stream latency inside any workspace.  
+- Enforce bank-wide design system (AgGrid Enterprise + Shadcn/Tailwind + OpenFin styling tokens) at registration time.  
+- Maintain full audit trail for every MFE version deployed to production (MiFID II / SEC Reg SCI requirement).  
+- Enable traders to self-compose workspaces using only approved, entitled MFEs.
+
+## 2. Core Platform Capabilities
+
+### 2.1 MFE Storefront (Trader-facing)
+- OpenFin Application: `ficc-storefront-v2` (single manifest).  
+- Catalog UI with faceted search (asset-class, workflow, desk, tags).  
+- “Add to Workspace” drag-and-drop directly into OpenFin Workspace Layout.  
+- Live preview pane showing FDC3 intents supported.  
+- Entitlement-gated (via OpenFin Runtime permissions + internal LDAP group check).
+
+### 2.2 MFE Registry (Control Plane – single source of truth)
+- Backend: Go microservice + PostgreSQL + Redis cache (sub-10 ms reads).  
+- REST + gRPC API protected by mTLS + JWT (bank IAM).  
+- Stores immutable JSON manifests (OpenFin app.json compatible).  
+- Event stream (Kafka) for every registration/approval/version change → audit log + notification.
+
+### 2.3 Governance Control Plane
+- Automated CI/CD pipeline hook (GitHub Actions + OpenFin CLI).  
+- Runtime validation service (WebAssembly) that spins up MFE in isolated OpenFin container and runs:  
+  - Design-system compliance scan (Tailwind class whitelist + AgGrid theme check).  
+  - Performance SLA test (CPU < 15 %, memory < 120 MB, FDC3 round-trip < 50 ms).  
+  - Security scan (dependency CVE + OpenFin sandbox escape check).
+
+## 3. User Journeys
+
+### 3.1 Developer Registration Flow (5 steps, <30 min)
+1. Squad pushes MFE to internal GitHub (monorepo or independent repo).  
+2. CI generates OpenFin manifest + FDC3 context map + data-contract YAML.  
+3. Developer opens `https://registry.ficc.bank/register` → auto-fills from GitHub.  
+4. Submits registration → automated governance pipeline runs (see §5).  
+5. On approval → MFE appears in Storefront within 60 seconds (Redis pub/sub).
+
+### 3.2 Product Manager Workflow Configuration Flow
+1. PM logs into `workflow-studio.ficc.bank` (low-code OpenFin app).  
+2. Drags registered MFEs from Storefront catalog into canvas.  
+3. Defines FDC3 intent chains (e.g., “ViewTrade” → “PriceBlotter” → “TradeTicket”).  
+4. Saves as “Gold Workflow” template with versioned JSON layout.  
+5. Publishes to OpenFin Workspace Catalog → auto-deployed to all entitled traders.
+
+### 3.3 Trader Workspace Consumption Flow
+1. Trader opens OpenFin Desktop → launches Storefront.  
+2. Searches “FX Option Volatility Surface” → clicks “Add to Current Workspace”.  
+3. MFE snaps into layout (OpenFin Workspace API `addApplication`).  
+4. Trader drags, resizes, snaps with other MFEs; FDC3 context automatically flows.  
+5. Saves workspace → persisted in OpenFin Workspace Server with user ID + entitlement snapshot.
+
+## 4. MFE Registration Model (JSON Schema)
+
+```json
+{
+  "mfeId": "fx-options-vol-surface-v2",
+  "version": "2.3.1",
+  "ownerSquad": "FX-Options",
+  "manifestUrl": "https://artifactory.bank/fx-options/vol-surface/2.3.1/app.json",
+  "fdc3": {
+    "intents": ["ViewInstrument", "Trade", "PriceUpdate"],
+    "contextTypes": ["fdc3.instrument", "fdc3.trade", "custom.ficc.price"]
+  },
+  "dataContracts": {
+    "ingest": ["AMPS://fx.options.vol", "Ignite://price.cache"],
+    "egress": ["gRPC://trade.booking.v2"]
+  },
+  "bff": "https://bff-fx.bank/internal",
+  "designSystem": { "agGridTheme": "bank-dark", "tailwindPreset": "ficc-v1" },
+  "performanceSLA": { "cpu": 12, "mem": 95, "fdc3LatencyMs": 42 },
+  "entitlements": ["FX-OPT-DESK", "TRADER-LVL-3"],
+  "complianceTags": ["MiFID-II-audit", "Reg-SCI"]
+}
+
