@@ -477,3 +477,90 @@ Next Steps:
 Would you like me to provide a sample TypeScript manifest definition for the MFE Registry or a system architecture diagram showing the flow between OpenFin and the gRPC backend?
 
 
+This design transforms the trading desktop from a collection of siloed applications into a Composable Trading Operating System. By utilizing OpenFin Workspaces as the delivery shell and a custom Registry as the control plane, we enable high-velocity feature delivery without compromising the stability of the Tier-1 trading environment.
+1. Vision and Objectives
+To establish a Marketplace of Trading Capabilities where business logic is decentralized (federated) but the user experience and operational risk are managed centrally.
+ * Decouple Release Cycles: Allow the FX desk to deploy a pricer update at 10:00 AM without impacting the Rates desk’s blotter.
+ * Contextual Intelligence: Use FDC3 to ensure that clicking a CUSIP in a research MFE instantly updates the "Order Entry" and "Risk" MFEs.
+ * Zero-Config Discovery: Traders should find tools as easily as searching on a mobile device, with entitlements pre-filtered.
+2. Core Platform Capabilities
+MFE Registry (The Control Plane)
+The "Source of Truth" for the ecosystem. It is a gRPC-based service storing the state of all deployed MFEs, their versions, and their interoperability contracts (FDC3 intents and context).
+Storefront (The "App Store")
+A React-based discovery portal embedded in OpenFin. It allows Product Managers to "shop" for components, view documentation, and see live previews of MFEs using mock data.
+Workspace Provider
+A specialized OpenFin service that intercepts Home (Search) and Store requests. It dynamically builds the user’s UI by querying the Registry based on the user's LDAP/Active Directory groups and specific entitlements.
+3. User Journeys
+Developer Registration Flow
+ * Build: Developer pushes code to a domain-specific repository.
+ * Validate: CI/CD runs a Platform Compatibility Test (e.g., checking for specific ag-grid versions and Tailwind-only CSS).
+ * Register: A POST request is sent to the Registry with the MFE manifest (entry points, FDC3 config, and metadata).
+ * Sandbox: The MFE is instantly available in the "Staging" Storefront for UAT and PM approval.
+Product Manager Workflow Configuration
+ * Browse: PM enters the Storefront and filters by "Yield Curve" or "Execution."
+ * Compose: PM uses a drag-and-drop Workspace Builder to snap MFEs together into a logical layout.
+ * Publish: PM saves the layout as a "Public Workspace" for the Swaps Desk, defining the default FDC3 channels for the components.
+Trader Workspace Consumption
+ * Search: Trader hits Alt + Space (OpenFin Home), types "Rates Dashboard."
+ * Launch: OpenFin Home resolves the intent, fetches the PM-approved layout, and hydrates the MFEs.
+ * Sync: As the trader filters for "USD Libor," all MFEs in that workspace update via FDC3 broadcast channels.
+4. MFE Registration Model
+The Registry captures a structured schema for every component to ensure automated discovery and safety.
+| Field | Data Type | Requirement | Purpose |
+|---|---|---|---|
+| appId | String | Unique | Internal identifier (e.g., fx-options-volsurface). |
+| manifestUrl | URL | Mandatory | The location of the app.json (OpenFin config). |
+| fdc3Config | Object | Mandatory | Declares listensTo and publishes context types. |
+| dataContracts | Array | Optional | AMPS topics or gRPC endpoints required. |
+| entitlements | Array | Mandatory | Required AD Groups (e.g., APP_FICC_TRADER_PROD). |
+| perfSLA | Object | Mandatory | Target "Time to Interactive" (TTI) and Max Memory. |
+5. Governance and Approval Model
+We utilize a Two-Tiered Gatekeeping system to maintain Tier-1 stability.
+ * Automated (The "Synthetic Auditor"):
+   * Bundle Analysis: Rejects MFEs exceeding 500KB initial load.
+   * Security Scan: Checks for vulnerable NPM packages and hardcoded secrets.
+   * Design Linting: Verifies Shadcn/Tailwind tokens match the bank's design system.
+ * Human (The "Product Gate"):
+   * UX Review: Platform Design Leads verify the MFE follows layout guidelines.
+   * Risk Approval: Business Risk confirms data displayed meets regulatory transparency requirements.
+6. Workspace Composition Model
+Using the OpenFin Platform API, we treat layouts as "Stateful Snapshots."
+ * View Injection: MFEs are loaded as OpenFin Views within a Window.
+ * Interlink Logic: The Registry injects a "Bridge Script" that maps FDC3 intents specifically for that layout, preventing context leakage to other open windows.
+ * Persistence: Layouts are stored in the Registry as JSON, allowing a trader to roam across terminals and see their exact MFE configuration.
+7. Federation Model
+The "Hub and Spoke" model ensures the platform team is not a bottleneck.
+ * Platform Team (The Hub): Owns the OpenFin license, the Registry API, the Design System, and the "Shell" (Workspaces).
+ * Domain Pods (The Spokes): FX, Rates, Credit, and Commodities teams each own their MFEs, their domain-aligned BFF (Backend for Frontend), and their data pipelines (e.g., Ignite/AMPS/Deephaven).
+8. Operating Model
+ * Platform Architect: Defines the "Contract" (FDC3, gRPC patterns, and MFE lifecycle).
+ * Domain Lead: Accountable for the MFE business logic, performance, and uptime.
+ * Product Manager: Curates workspaces and defines "Gold" templates for the desk.
+ * SRE: Monitors the Registry and the "Health" of the OpenFin bus across the trading floor.
+9. Implementation Examples
+FX Options Desk
+ * MFE: "Volatility Surface Visualizer."
+ * Integration: Registered as an MFE that consumes a Deephaven stream. It publishes the fdc3.valuation context.
+ * Onboarding: Developers register it; the PM adds it to the "FX Options Core" workspace.
+Swaps Desk
+ * Workflow: Creating a "Relative Value" workspace.
+ * Composition: PM drags an AgGrid-powered Blotter (Rates Team) and a "Real-time Curve Chart" (Analytics Team).
+ * Result: When a trader selects a 10Y Swap in the blotter, the chart MFE automatically re-plots the curve for that specific tenor via FDC3.
+10. KPIs and Success Metrics
+ * Time to Desktop: Measure from "Code Commit" to "Visible in Storefront" (Target: < 1 hour).
+ * Component Reuse: Percentage of MFEs used in more than one desk's workspace.
+ * Stability Index: Average "Time Between Crashes" per MFE using OpenFin's system-report.
+ * Adoption Rate: Percentage of traders using custom-configured workspaces vs. default layouts.
+11. Risks and Mitigation Strategies
+> Risk: Data Silos leading to inconsistent pricing across MFEs.
+> Mitigation: Enforce a "Standard Data Catalog" in the Registry; MFEs are restricted to authorized gRPC/AMPS streams.
+> 
+> Risk: Performance degradation (Memory Leaks) in a long-running OpenFin process.
+> Mitigation: Implement "Lazy Hydration"—MFEs in background tabs are throttled or hibernated until focused.
+> 
+> Risk: FDC3 Version Bloat (Incompatibility between older and newer MFEs).
+> Mitigation: Use a central Interop Broker within the Control Plane to map legacy intents to new FDC3 standards in real-time.
+> 
+Would you like me to provide a sample TypeScript manifest definition for the MFE Registry or a gRPC service definition for the Registration API?
+
+
