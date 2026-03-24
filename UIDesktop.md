@@ -394,6 +394,43 @@ I can convert this into:
 
 Just tell me 👍
 
+---------
+
+The "Atomic Micro Front End" (MFE) Principles and Expectations : 
+
+-- Building federated modules that are availble in MFE Registry within OpenFin Workspace 
+-- Styling/Themes : STAR styles + Standardized Tailwind CSS 
+-- App Store: a central manifest service (the "App Store") where each MFE is registered with metadata (category, owner, preview URL)
+-- Module Federation:  Webpack or Vite Module Federation to allow the OpenFin shell to dynamically load these MFEs at runtime without a full redeploy of the workspace
+-- visual parity & interaction : Shadcn/UI for logic-heavy components and Ag-Grid/TailGrids for grid layouts 
+-- Standard OpenFin : Workspaces/Dock/Notifications/ etc. 
+-- Interop: FDC3 & Colored Channels, use these to abstract 
+-- Persistent layouts per user/role 
+-- OpenFin Native notifications and Docker 
+
+
+-- Self-Serve Config based Onboarding: When a new MFE is deployed, it uses OpenFin Snapshots to "announce" itself to the user / prod support 
+-- Preview Mode: Use OpenFin's view objects to render a "Live Sandbox" in the App Store so users can interact with the MFE before adding it to their workspace.
+
+Our agentic SDLC Process : 
+
+-- Spec to Screen: Figma Make (with specialized plugins) to map Figma Tokens (colors, spacing) directly to Tailwind config 
+-- Component Mapping: Map Figma components directly to your Shadcn/Ag-Grid library. For ex : when a designer places a "Button" in Figma, the code generator knows to import
+-- Add more here 
+
+BFF & Data Integration : 
+
+-- The Data Hook Layer: React Hook or Angular Service template for Deephaven and AMPS with BiDirectional flow where required 
+-- FDC3 based Glue for listeners, intents and data exchange 
+
+
+MCP for "Feature-to-Deploy" Speed and Context enhanced memory : 
+
+-- Context Injection: "Golden Path" templates (to structure a Deephaven connection
+-- Scaffold Generation: Instead of asking for a "React component," the command can be "Generate a new 'Fixing Prices View' MFE using the Ag-Grid template or Shadcn data-table"
+-- Automated Webhooks: MCP can browse BFF API documentation and generate the fetch logic and validation schemas automatically
+
+---------
 
 This design transforms the trading desktop from a collection of siloed applications into a Composable Trading Operating System. By utilizing OpenFin Workspaces as the delivery shell and a custom Registry as the control plane, we enable high-velocity feature delivery without compromising the stability of the Tier-1 trading environment.
 1. Vision and Objectives
