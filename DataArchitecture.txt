@@ -1,3 +1,30 @@
+JPMorgan Chase just drew a hard line for 65,000 software engineers:
+
+Use AI tools. Measurably. Or it affects your performance review.
+
+Starting Q1 2026, the bank formally updated performance expectations for software and security engineers — making AI adoption a required, trackable metric.
+
+A real-time dashboard monitors every engineer's GitHub Copilot usage. The categories: 'heavy user,' 'light user,' 'non-user.' The last one is now a career risk.
+
+Why the shift? The results made it easy:
+→ 10-20% productivity improvement among engineers using their internal AI assistant
+→ 65,000+ engineers actively on AI tooling
+→ 30% overall velocity improvement
+→ All while maintaining strict financial regulatory compliance
+
+That last point matters.
+
+JPMorgan operates under regulations that make most enterprise compliance teams nervous. If they can mandate AI coding adoption at this scale under these constraints, the 'our industry is too regulated' argument just lost its last line of defense.
+
+This is the preview of what's coming across enterprise tech.
+
+The question for engineering leaders isn't whether to require AI fluency. It's whether you build the culture to make that transition well — or wait until a competitor's velocity forces the conversation.
+
+The most forward-looking tech organizations are treating AI fluency the way they treated cloud fluency in 2012: early, aggressively, with clear accountability.
+
+#AI, #Engineering, #TechLeadership, #FutureOfWork, #EnterpriseAI
+
+
 Focusing a little bit on Data Mesh, and Data Vault mostly applicable for a large scale enterprise self-serv data platform’s.
 
 Think about it: if we're not familiar with the fundamental concepts of IaC, Data Mesh, and Data Vault, we might underestimate their significance. They aren't just tools you pick up; they are guiding principles that shape our approach and can take a long time to truly internalize and implement effectively. It's the kind of knowledge that, in retrospect, often leads to the thought, "We should have done this better from the start."
