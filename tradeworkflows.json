@@ -1,0 +1,159 @@
+{
+  "category": "NonEconomicAmendments",
+  "scenarios": [
+    {
+      "scenario": "Settlement Date Change",
+      "workflow": "Trader Request → MO Validation → Supervisor Approval",
+      "orchestration": [
+        "Validate amendment vs original trade",
+        "Check holiday calendars",
+        "Update settlement instructions"
+      ],
+      "state_transition": "Live → Amended → Revalidated"
+    },
+    {
+      "scenario": "Counterparty Legal Entity Correction",
+      "workflow": "Trader Request → Credit Validation → Supervisor Approval",
+      "orchestration": [
+        "Validate legal entity mapping",
+        "Check CSA/netting set",
+        "Reassign trade ownership"
+      ],
+      "state_transition": "Live → Counterparty Updated → Revalidated"
+    },
+    {
+      "scenario": "Booking Entity Change",
+      "workflow": "Trader Request → Finance Validation → Supervisor Approval",
+      "orchestration": [
+        "Update accounting mapping",
+        "Validate PnL attribution",
+        "Update regulatory reporting entity"
+      ],
+      "state_transition": "Live → Rebook Requested → Rebooked"
+    },
+    {
+      "scenario": "Premium Payment Date Change",
+      "workflow": "Trader Request → Treasury Validation → Supervisor Approval",
+      "orchestration": [
+        "Adjust cashflow schedule",
+        "Notify settlements",
+        "Validate liquidity impact"
+      ],
+      "state_transition": "Live → Premium Updated → Revalidated"
+    }
+  ]
+}
+
+
+{
+  "category": "EconomicAmendments",
+  "scenarios": [
+    {
+      "scenario": "Notional Reduction (Partial Tear-Up)",
+      "workflow": "Trader Request → Risk Validation → Supervisor Approval",
+      "orchestration": [
+        "Recalculate Greeks",
+        "Adjust hedge positions",
+        "Create tear-up linkage"
+      ],
+      "state_transition": "Live → Partially Terminated → Revalidated"
+    },
+    {
+      "scenario": "Strike Price Correction",
+      "workflow": "Trader Request → Risk + Product Control Validation → Supervisor Approval",
+      "orchestration": [
+        "Reprice trade",
+        "Update sensitivities",
+        "Validate PnL impact"
+      ],
+      "state_transition": "Live → Repriced → Revalidated"
+    },
+    {
+      "scenario": "Barrier Level Amendment",
+      "workflow": "Trader Request → Risk Validation → Supervisor Approval",
+      "orchestration": [
+        "Re-run barrier monitoring",
+        "Reprice option",
+        "Update hedging requirements"
+      ],
+      "state_transition": "Live → Barrier Amended → Revalidated"
+    },
+    {
+      "scenario": "Exercise Style Correction",
+      "workflow": "Trader Request → Product Control → Supervisor Approval",
+      "orchestration": [
+        "Validate product definition",
+        "Re-run pricing model",
+        "Update risk metrics"
+      ],
+      "state_transition": "Live → Product Amended → Revalidated"
+    }
+  ]
+}
+
+{
+  "category": "LifecycleEvents",
+  "scenarios": [
+    {
+      "scenario": "Early Exercise",
+      "workflow": "Client Instruction → MO Validation → Supervisor Approval",
+      "orchestration": [
+        "Validate exercise eligibility",
+        "Generate exercise cashflows",
+        "Notify settlements and risk"
+      ],
+      "state_transition": "Live → Exercised → Settled"
+    },
+    {
+      "scenario": "Option Expiry (Out of the Money)",
+      "workflow": "Auto Event → MO Monitoring → Supervisor Signoff",
+      "orchestration": [
+        "Check market fixing",
+        "Expire worthless",
+        "Release capital and limits"
+      ],
+      "state_transition": "Live → Expired → Closed"
+    },
+    {
+      "scenario": "Option Expiry (In the Money)",
+      "workflow": "Auto Event → MO Validation → Supervisor Approval",
+      "orchestration": [
+        "Auto-exercise",
+        "Generate FX spot/forward trade",
+        "Create settlement instructions"
+      ],
+      "state_transition": "Live → Exercised → Settled"
+    },
+    {
+      "scenario": "Trade Novation",
+      "workflow": "Client Request → Legal & Credit Validation → Supervisor Approval",
+      "orchestration": [
+        "Transfer trade economics",
+        "Update confirmations",
+        "Reassign collateral agreement"
+      ],
+      "state_transition": "Live → Novated → Revalidated"
+    },
+    {
+      "scenario": "Trade Compression",
+      "workflow": "Compression Run → MO Validation → Supervisor Approval",
+      "orchestration": [
+        "Identify eligible trades",
+        "Net exposures",
+        "Create replacement trades"
+      ],
+      "state_transition": "Live → Compressed → Replaced"
+    },
+    {
+      "scenario": "Trade Cancel & Rebook",
+      "workflow": "Trader Request → MO Investigation → Supervisor Approval",
+      "orchestration": [
+        "Cancel erroneous trade",
+        "Rebook corrected trade",
+        "Maintain audit chain"
+      ],
+      "state_transition": "Live → Cancelled → Rebooked"
+    }
+  ]
+}
+
